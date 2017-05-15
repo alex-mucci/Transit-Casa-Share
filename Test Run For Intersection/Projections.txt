@@ -1,0 +1,3 @@
+california state plane zone 3 (san francisco) = epsg:2227
+
+NAD 1983 GCS (lat/lon) = epsg:4269
