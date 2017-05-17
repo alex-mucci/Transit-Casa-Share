@@ -9,8 +9,8 @@ BUFFERS = ['E:\Transit-Casa-Share\Data/Buffers_Tenth_GCS.shp',
 'E:\Transit-Casa-Share\Data/Buffers_Third_GCS.shp']
 
 BLOCKS = 'E:/Transit-Casa-Alex/Input/2000 Census Shapefiles/2000 Census Blocks/Combined_Counties.shp'
-OUTFILE_CSV = 'Split_Buffers.shp'
-OUTFILE_SHP = 'Split_Buffers.csv'
+OUTFILE_CSV = ['Split_Buffers_Tenth.shp', 'Split_Buffers_Quarter.shp', 'Split_Buffers_Third.shp']
+OUTFILE_SHP = ['Split_Buffers_Tenth.csv', 'Split_Buffers_Quarter.csv', 'Split_Buffers_Third.csv']
 
 def blocks_area(blocks, year):
     """
@@ -72,7 +72,7 @@ def intersect(buffers,blocks):
         stateplane = identity.to_crs(epsg = '2227')
         
     #convert ft^2 to acres
-        stateplane['SPLIT_AREA'] = stateplane.area*2.29568e-5
+        stateplane['SPLIT_AREA'] = stateplane.area*0.0000229568
         stateplane['SPLIT_RATIO'] = stateplane['SPLIT_AREA']/stateplane['AREA']
        
         data = stateplane[stateplane['STOP_ID'] == stop]
@@ -87,18 +87,27 @@ def intersect(buffers,blocks):
     
 
 if __name__ == "__main__":
+    count = 0
 
     for buffers in BUFFERS:
         print('Started New Buffer Titled: ' + buffers)
+        
         buffers = gp.read_file(buffers)
         blocks = gp.read_file(BLOCKS)
         
         # this formats the area column of the two counties so that they are the same name
         blocks['ALAND00'] = blocks.apply(lambda row: clean_area(row),axis = 1)
         
+        # calculate the area of the cenusus blocks (in acres)
         blocks = blocks_area(blocks,2000)
+        
+        # function that intersects the census blocks with the buffers and calculates ratio of the split area over the original block area
         split_buffers = intersect(buffers,blocks)
-       
-        split_buffers.to_file(OUTFILE_CSV)
-        split_buffers.to_csv(OUTFILE_SHP)
-        print('ALL DONE TIME FOR SOME HALO!!!')
+        
+       #write the intersected tenth-mile buffers to a csv and shapefile
+        split_buffers.to_file(OUTFILE_CSV[count])
+        split_buffers.to_csv(OUTFILE_SHP[count])
+        
+        count = count + 1
+            
+    print('ALL DONE TIME FOR SOME HALO!!!')
