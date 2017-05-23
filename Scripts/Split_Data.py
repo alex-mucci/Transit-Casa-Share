@@ -3,15 +3,17 @@ import pandas as pd
 import datetime
 import numpy as np
 
-
+#set which buffer shapefiles that are going to be processed
 BUFFERS = ['E:\Transit-Casa-Share\Data/Buffers_Tenth_GCS.shp',
 'E:\Transit-Casa-Share\Data/Buffers_Quarter_GCS.shp',
 'E:\Transit-Casa-Share\Data/Buffers_Third_GCS.shp']
 
-BLOCKS = 'E:/Transit-Casa-Alex/Input/2000 Census Shapefiles/2000 Census Blocks/Combined_Counties.shp'
+#change the paths to do a different set of census blocks or to save the output in a different directory
+BLOCKS = 'E:/Transit-Casa-Alex/Output/Census Block Data/Census_Block_Data.shp'
 OUTFILE_CSV = ['Split_Buffers_Tenth.shp', 'Split_Buffers_Quarter.shp', 'Split_Buffers_Third.shp']
 OUTFILE_SHP = ['Split_Buffers_Tenth.csv', 'Split_Buffers_Quarter.csv', 'Split_Buffers_Third.csv']
 
+YEAR = 2010
 def blocks_area(blocks, year):
     """
     function to calculate the area (in acres) of census blocks 
@@ -63,6 +65,7 @@ def intersect(buffers,blocks):
         
     #select out the census blocks that intersect the buffer
         blocks_select = gp.sjoin(blocks,buffer,how = 'inner',op = 'intersects')
+       
         
     #identity keeps only the left geodataframe and splits it based on the right geodataframe
         identity = gp.overlay(buffer,blocks_select,how = 'identity')
@@ -94,20 +97,23 @@ if __name__ == "__main__":
         
         buffers = gp.read_file(buffers)
         blocks = gp.read_file(BLOCKS)
-        
-        # this formats the area column of the two counties so that they are the same name
-        blocks['ALAND00'] = blocks.apply(lambda row: clean_area(row),axis = 1)
-        
-        # calculate the area of the cenusus blocks (in acres)
-        blocks = blocks_area(blocks,2000)
-        
-        # function that intersects the census blocks with the buffers and calculates ratio of the split area over the original block area
-        split_buffers = intersect(buffers,blocks)
-        
-       #write the intersected tenth-mile buffers to a csv and shapefile
-        split_buffers.to_file(OUTFILE_CSV[count])
-        split_buffers.to_csv(OUTFILE_SHP[count])
-        
-        count = count + 1
+        blocks.crs = buffers.crs
+
+        if YEAR == 2000:
+            # this formats the area column of the two counties so that they are the same name
+            blocks['ALAND00'] = blocks.apply(lambda row: clean_area(row),axis = 1)
+        elif YEAR == 2010:
+            # calculate the area of the cenusus blocks (in acres)
+            blocks = blocks_area(blocks,YEAR)
             
+            # function that intersects the census blocks with the buffers and calculates ratio of the split area over the original block area
+            split_buffers = intersect(buffers,blocks)
+            
+           #write the intersected tenth-mile buffers to a csv and shapefile
+            split_buffers.to_file(str(YEAR)+ '_' + OUTFILE_CSV[count])
+            split_buffers.to_csv(str(YEAR) + '_' + OUTFILE_SHP[count])
+            
+            count = count + 1
+        else:
+            print('bad year')
     print('ALL DONE TIME FOR SOME HALO!!!')
