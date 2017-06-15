@@ -3,7 +3,7 @@ import geopandas as gp
 import geocoder
 from shapely.geometry import Point
 
-YEARS = [2014,2015]
+YEARS = [2015]
 HOUSING_CSV_BASE = 'E:\Transit-Casa-Alex\Input\Housing Inventory/'
 CENSUS_BLOCKS = 'E:/Transit-Casa-Alex/Input/2010 Cenusus Shapefiles/2010 Census Blocks/075/tl_2010_06075_tabblock10.shp'
 
