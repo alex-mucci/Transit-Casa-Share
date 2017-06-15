@@ -7,6 +7,10 @@ import numpy as np
 from shapely.geometry import Point
 
 HDFFILE_PATH = "E:/Transit_Casa/Output/sfmuni_monthly_ts.h5"
+MONTH1 = '2016-10-01'
+MONTH2 = '2016-12-01'
+BUFFER_SIZES = [1760,1320,528]
+
 
 #could not add in stop names for now, but may want to do that in the future
 
@@ -19,7 +23,9 @@ def grab_stops(hdffile_path):
     
     store = pd.HDFStore(hdffile_path)
     df = store.select('stop_day', columns = ['STOP_LAT','STOP_LON','STOP_ID'])
-    df = df.groupby('STOP_ID').mean()
+    mask = (df['MONTH'] >= MONTH1) & (df['MONTH'] <= MONTH2)
+    df = df.loc[mask]
+    df = df.groupby('STOP_ID',as_index = False).mean()
     
     return df
     
@@ -31,7 +37,7 @@ def LatLon_to_point(df):
     """
     
     df['geometry'] = df.apply(lambda x: Point((float(x.STOP_LON), float(x.STOP_LAT))), axis=1)
-    stops = gp.GeoDataFrame(df, geometry='geometry', crs = df.crs = "+init=epsg:4326")
+    stops = gp.GeoDataFrame(df, geometry='geometry', crs = {'init':'epsg:4326'})
     
     return stops
     
@@ -49,16 +55,28 @@ def make_buffers(stops,buffer_size):
     """
     
     buffer = stops.copy()
-    buffer.to_crs({'init':'epsg 6420'})
-    buffer.geometry = stops.buffer(buffer_size)
+    buffer = buffer.to_crs({'init':'epsg 6420'})
+    buffer.geometry = buffer.buffer(buffer_size)
+    print(buffer.crs)
    
    
     
 if __name__ == "__main__":
     df = grab_stops("E:/Transit_Casa/Output/sfmuni_monthly_ts.h5")
+    df2.to_csv('E:/Transit-Casa-Alex/Input/Bus_Stops/Bus_Stops.csv')
     
     stops = LatLon_to_point(df)
+    stops.to_file('E:/Transit-Casa-Alex/Input/Bus_Stops/Bus_Stops.shp', driver='ESRI Shapefile')
     
-    stops.to_file('Bus_Stops.shp', driver='ESRI Shapefile')
-    
-    buffer.to_file('E:\Transit-Casa-Alex\Output\Buffers\Tenth\Buffers\Buffers_Tenth driver='ESRI Shapefile')
+    for buffer_size in BUFFER_SIZES:
+        buffers = make_buffers(stops,buffer_size)
+        
+        
+        if buffer_size == 1760:
+            buffers.to_file('E:/Transit-Casa-Alex/Output/Buffers/Quarter_Buffers.shp',driver='ESRI Shapefile')
+        elif buffer_size == 1320:
+            buffers.to_file('E:/Transit-Casa-Alex/Output/Buffers/Third_Buffers.shp',driver='ESRI Shapefile')
+        elif buffer_size == 528:
+            buffers.to_file('E:/Transit-Casa-Alex/Output/Buffers/Tenth_Buffers.shp',driver='ESRI Shapefile')
+        else:
+            print('Bad Buffer Size!')
