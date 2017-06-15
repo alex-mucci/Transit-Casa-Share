@@ -19,7 +19,14 @@ SCALE_LIST = ['EDHLTH_RAC', 'EDHLTH_WAC',
        
        
 def scale(scale_list,df,keep)
-
+    """
+    function that scales a list of columns by a specified column (SPLIT_RATIO) and selects out columns of interest.
+    
+    scale_list = a list of column names that need to be scaled (string)
+    df = dataframe that contains the columns needing to be scaled and a scaler-column (SPLIT_RATIO)
+    keep = a list of columns that are of interest at the end. Filters out the unscalled columns. 
+    
+    """
     for column in scale_list:
         name = column + '_SCALED'
         df[name] = df[column]*df['SPLIT_RATIO']

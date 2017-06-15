@@ -4,14 +4,14 @@ import geopandas as gp
 
 
 CENSUS_BLOCK_SHAPEFILE_START = 'E:/Transit-Casa-Alex/Input/2010 Cenusus Shapefiles/2010 Census Blocks/'    
-WAC_INFILE = 'E:/Transit-Casa-Alex/Input/LEHD Census Blocks/WAC/Original/ca_wac_S000_JT00_2009.csv'
-RAC_INFILE = 'E:/Transit-Casa-Alex/Input/LEHD Census Blocks/RAC/Original/ca_rac_S000_JT00_2009.csv'
+WAC_INFILE = 'E:/Transit-Casa-Alex/Input/LEHD Census Blocks/2014/WAC/Original/ca_wac_S000_JT00_2014.csv'
+RAC_INFILE = 'E:/Transit-Casa-Alex/Input/LEHD Census Blocks/2014/RAC/Original/ca_rac_S000_JT00_2014.csv'
 
 #eventually have a shapefile of the entire state and select out only the counties of interest
 COUNTYFIPS = ['075','081']
 OUTFILE_START = 'E:\Transit-Casa-Alex\Input\LEHD Census Blocks/' 
 OUTFILE_SHAPE_START = 'E:\Transit-Casa-Alex\Input\LEHD Census Blocks/' 
-
+YEAR = 2014
 DROP_LEHD_RAC = ['C000', 
     'CA01', 
     'CA02', 
@@ -159,10 +159,12 @@ def clean_lodes(df):
 
 
 if __name__ == "__main__":
-
+    
+    year = YEAR
+    
     for fips in COUNTYFIPS:
-        OUTFILE = OUTFILE_START + fips + '_Employment.csv'
-        OUTFILE_SHAPE = OUTFILE_SHAPE_START +  fips + '_Employment.shp'
+        OUTFILE = OUTFILE_START + str(year) + '/' + fips + '_Employment.csv'
+        OUTFILE_SHAPE = OUTFILE_SHAPE_START + str(year) + '/' + fips + '_Employment.shp'
         CENSUS_BLOCK_SHAPEFILE = CENSUS_BLOCK_SHAPEFILE_START + fips + '/tl_2010_06' + fips + '_tabblock10.shp'
         
         df = pd.DataFrame()
@@ -186,7 +188,7 @@ if __name__ == "__main__":
         
     #merge all of the datasets together
         df = pd.merge(rac,wac,how = 'outer',left_on = 'h_geocode',right_on = 'w_geocode',suffixes =('_RAC','_WAC'))
-        print('There are ' +str(len(df)) + ' Census Blocks with Data in California')
+        print('There are ' +str(len(df)) + ' LEHD Census Blocks with Data')
         
         df['BLOCK_ID'] = df.apply(lambda row: clean_ID(row),axis = 1)
         df2 = pd.merge(blocks,df,how = 'inner',left_on = 'GEOID10',right_on = 'BLOCK_ID')
@@ -200,10 +202,10 @@ if __name__ == "__main__":
         shape.to_file(OUTFILE_SHAPE, driver = 'ESRI Shapefile')
         
     #write a combined counties csv
-    sf = pd.read_csv('E:/Transit-Casa-Alex/Input/LEHD Census Blocks/San Francisco County/075_Employment.csv')
-    sm = pd.read_csv('E:/Transit-Casa-Alex/Input/LEHD Census Blocks/San Mateo County/081_Employment.csv')
+    sf = pd.read_csv('E:/Transit-Casa-Alex/Input/LEHD Census Blocks/2014/075_Employment.csv')
+    sm = pd.read_csv('E:/Transit-Casa-Alex/Input/LEHD Census Blocks/2014/081_Employment.csv')
     
     combined = sf.append(sm)
-    combined.to_csv('E:\Transit-Casa-Alex\Output\Employment (LEHD)/Combined Employment.csv')
+    combined.to_csv('E:\Transit-Casa-Alex\Input\LEHD Census Blocks/2014/Combined Employment.csv')
     
     print('ALL DONE TIME FOR A BEER')

@@ -20,8 +20,8 @@ def grab_stops(hdffile_path):
     store = pd.HDFStore(hdffile_path)
     df = store.select('stop_day', columns = ['STOP_LAT','STOP_LON','STOP_ID'])
     df = df.groupby('STOP_ID').mean()
-    #df2 = store.select('stop_day',columns = ['STOP_ID','STOPNAME'], where = 'MONTH=09-1-2009')
-
+    
+    return df
     
 def LatLon_to_point(df):
     """
@@ -30,13 +30,14 @@ def LatLon_to_point(df):
     df = dataframe with Lat/Lon columns
     """
     
-df['geometry'] = df.apply(lambda x: Point((float(x.STOP_LON), float(x.STOP_LAT))), axis=1)
-stops = gp.GeoDataFrame(df, geometry='geometry', crs = df.crs = "+init=epsg:4326")
-stops.to_crs(
-stops.to_file('Bus_Stops.shp', driver='ESRI Shapefile')
+    df['geometry'] = df.apply(lambda x: Point((float(x.STOP_LON), float(x.STOP_LAT))), axis=1)
+    stops = gp.GeoDataFrame(df, geometry='geometry', crs = df.crs = "+init=epsg:4326")
+    
+    return stops
+    
 
 
-def make_buffers(stops_df,buffer_outfile,buffer_size):
+def make_buffers(stops,buffer_size):
     """
     function that creates a buffer around a point feature. Make sure that the projection is in stateplane, may need ARCGIS for this. 
     NAD 1983 GCS for Lat/Lon (for defining projection, if needed) and California Zone 3 for state plane. 
@@ -48,5 +49,16 @@ def make_buffers(stops_df,buffer_outfile,buffer_size):
     """
     
     buffer = stops.copy()
+    buffer.to_crs({'init':'epsg 6420'})
     buffer.geometry = stops.buffer(buffer_size)
-    buffer.to_file(buffer_outfile, driver='ESRI Shapefile')
+   
+   
+    
+if __name__ == "__main__":
+    df = grab_stops("E:/Transit_Casa/Output/sfmuni_monthly_ts.h5")
+    
+    stops = LatLon_to_point(df)
+    
+    stops.to_file('Bus_Stops.shp', driver='ESRI Shapefile')
+    
+    buffer.to_file('E:\Transit-Casa-Alex\Output\Buffers\Tenth\Buffers\Buffers_Tenth driver='ESRI Shapefile')
