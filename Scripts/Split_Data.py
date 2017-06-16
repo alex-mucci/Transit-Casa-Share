@@ -4,9 +4,9 @@ import datetime
 import numpy as np
 
 #set which buffer shapefiles that are going to be processed
-BUFFERS = ['E:/Transit-Casa-Share/Data/Buffers_Tenth_GCS.shp',
-'E:/Transit-Casa-Share/Data/Buffers_Quarter_GCS.shp',
-'E:/Transit-Casa-Share/Data/Buffers_Third_GCS.shp']
+BUFFERS = ['E:\Transit-Casa-Alex\Output\Buffers\Tenth/Buffers_Tenth_GCS.shp',
+'E:\Transit-Casa-Alex\Output\Buffers\Quarter/Buffers_Quarter_GCS.shp',
+'E:\Transit-Casa-Alex\Output\Buffers\Third/Buffers_Third_GCS.shp']
 
 #change the paths to do a different set of census blocks or to save the output in a different directory
 BLOCKS = 'E:/Transit-Casa-Alex/Output/Census Block Data/2009/Census_Block_Data.shp'
