@@ -1,0 +1,128 @@
+﻿Merge branch 'master' of https://github.com/ramu225/Transit-Casa-Share
+
+# Conflicts:
+#	Notebooks/.ipynb_checkpoints/Adding Spatial Index-checkpoint.ipynb
+#	Notebooks/.ipynb_checkpoints/Creating Buffers around stops-checkpoint.ipynb
+#	Notebooks/.ipynb_checkpoints/Linking Census Block Data-checkpoint.ipynb
+#	Notebooks/ACS Data/Formatting the 5 year Processed tables.ipynb
+#	Notebooks/Adding Spatial Index.ipynb
+#	Notebooks/Buffers/Buffers_Quarter.cpg
+#	Notebooks/Buffers/Buffers_Quarter.dbf
+#	Notebooks/Buffers/Buffers_Quarter.prj
+#	Notebooks/Buffers/Buffers_Quarter.shp
+#	Notebooks/Buffers/Buffers_Quarter.shx
+#	Notebooks/Buffers/Buffers_Tenth.cpg
+#	Notebooks/Buffers/Buffers_Tenth.dbf
+#	Notebooks/Buffers/Buffers_Tenth.prj
+#	Notebooks/Buffers/Buffers_Tenth.shp
+#	Notebooks/Buffers/Buffers_Tenth.shx
+#	Notebooks/Buffers/Buffers_Third.cpg
+#	Notebooks/Buffers/Buffers_Third.dbf
+#	Notebooks/Buffers/Buffers_Third.prj
+#	Notebooks/Buffers/Buffers_Third.shp
+#	Notebooks/Buffers/Buffers_Third.shx
+#	Notebooks/Competing Transit Clean up.ipynb
+#	Notebooks/Creating Buffers around stops.ipynb
+#	Notebooks/Linking Census Block Data.ipynb
+#	Notebooks/Processing 3 Months of Bus Performance Data For 2009 Model.ipynb
+#	Notebooks/Route Plots.ipynb
+#	Scripts/CE 599 Paper/Linking_Buffer_Data.py
+#	Scripts/Clean_Lodes.py
+#	Scripts/Creating_Buffers.py
+#	Scripts/GIS_Processing_README.txt
+#	Scripts/Processing_ACS_Data.py
+#	Scripts/Split_Data.py
+#	Test Run For Intersection/Split Data.ipynb
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 10 and 2 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	new file:   Data/Buffers_Quarter_GCS.cpg
+#	new file:   Data/Buffers_Quarter_GCS.dbf
+#	new file:   Data/Buffers_Quarter_GCS.prj
+#	new file:   Data/Buffers_Quarter_GCS.sbn
+#	new file:   Data/Buffers_Quarter_GCS.sbx
+#	new file:   Data/Buffers_Quarter_GCS.shp
+#	new file:   Data/Buffers_Quarter_GCS.shp.xml
+#	new file:   Data/Buffers_Quarter_GCS.shx
+#	new file:   Data/Buffers_Tenth_GCS.cpg
+#	new file:   Data/Buffers_Tenth_GCS.dbf
+#	new file:   Data/Buffers_Tenth_GCS.prj
+#	new file:   Data/Buffers_Tenth_GCS.sbn
+#	new file:   Data/Buffers_Tenth_GCS.sbx
+#	new file:   Data/Buffers_Tenth_GCS.shp
+#	new file:   Data/Buffers_Tenth_GCS.shp.xml
+#	new file:   Data/Buffers_Tenth_GCS.shx
+#	new file:   Data/Buffers_Third_GCS.cpg
+#	new file:   Data/Buffers_Third_GCS.dbf
+#	new file:   Data/Buffers_Third_GCS.prj
+#	new file:   Data/Buffers_Third_GCS.sbn
+#	new file:   Data/Buffers_Third_GCS.sbx
+#	new file:   Data/Buffers_Third_GCS.shp
+#	new file:   Data/Buffers_Third_GCS.shp.xml
+#	new file:   Data/Buffers_Third_GCS.shx
+#	new file:   Data/Combined_Counties.cpg
+#	new file:   Data/Combined_Counties.dbf
+#	new file:   Data/Combined_Counties.prj
+#	new file:   Data/Combined_Counties.sbn
+#	new file:   Data/Combined_Counties.sbx
+#	new file:   Data/Combined_Counties.shp
+#	new file:   Data/Combined_Counties.shp.xml
+#	new file:   Data/Combined_Counties.shx
+#	modified:   Notebooks/.ipynb_checkpoints/Adding Spatial Index-checkpoint.ipynb
+#	modified:   Notebooks/.ipynb_checkpoints/Creating Buffers around stops-checkpoint.ipynb
+#	modified:   Notebooks/.ipynb_checkpoints/Linking Census Block Data-checkpoint.ipynb
+#	modified:   Notebooks/ACS Data/Formatting the 5 year Processed tables.ipynb
+#	modified:   Notebooks/Adding Spatial Index.ipynb
+#	deleted:    Notebooks/Buffers/Buffers_Quarter.cpg
+#	deleted:    Notebooks/Buffers/Buffers_Quarter.dbf
+#	deleted:    Notebooks/Buffers/Buffers_Quarter.prj
+#	new file:   Notebooks/Buffers/Buffers_Quarter.sbn
+#	new file:   Notebooks/Buffers/Buffers_Quarter.sbx
+#	deleted:    Notebooks/Buffers/Buffers_Quarter.shp
+#	deleted:    Notebooks/Buffers/Buffers_Quarter.shx
+#	deleted:    Notebooks/Buffers/Buffers_Tenth.cpg
+#	deleted:    Notebooks/Buffers/Buffers_Tenth.dbf
+#	deleted:    Notebooks/Buffers/Buffers_Tenth.prj
+#	new file:   Notebooks/Buffers/Buffers_Tenth.sbn
+#	new file:   Notebooks/Buffers/Buffers_Tenth.sbx
+#	deleted:    Notebooks/Buffers/Buffers_Tenth.shp
+#	deleted:    Notebooks/Buffers/Buffers_Tenth.shx
+#	deleted:    Notebooks/Buffers/Buffers_Third.cpg
+#	deleted:    Notebooks/Buffers/Buffers_Third.dbf
+#	deleted:    Notebooks/Buffers/Buffers_Third.prj
+#	new file:   Notebooks/Buffers/Buffers_Third.sbn
+#	new file:   Notebooks/Buffers/Buffers_Third.sbx
+#	deleted:    Notebooks/Buffers/Buffers_Third.shp
+#	deleted:    Notebooks/Buffers/Buffers_Third.shx
+#	modified:   Notebooks/Competing Transit Clean up.ipynb
+#	modified:   Notebooks/Creating Buffers around stops.ipynb
+#	modified:   Notebooks/Linking Census Block Data.ipynb
+#	modified:   Notebooks/Processing 3 Months of Bus Performance Data For 2009 Model.ipynb
+#	modified:   Notebooks/Route Plots.ipynb
+#	new file:   Notebooks/estimate2.csv
+#	new file:   Notebooks/route54.csv
+#	modified:   Scripts/CE 599 Paper/Linking_Buffer_Data.py
+#	modified:   Scripts/Clean_Lodes.py
+#	modified:   Scripts/Creating_Buffers.py
+#	modified:   Scripts/GIS_Processing_README.txt
+#	new file:   Scripts/Process_Competing_Transit.py
+#	modified:   Scripts/Processing_ACS_Data.py
+#	modified:   Scripts/Split_Data.py
+#	modified:   Test Run For Intersection/Split Data.ipynb
+#	new file:   Test Run For Intersection/Split_Data.py
+#
+

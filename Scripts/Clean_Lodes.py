@@ -3,6 +3,7 @@ import numpy as np
 import geopandas as gp
 
 
+<<<<<<< HEAD
 CENSUS_BLOCK_SHAPEFILE_START = 'E:/Transit-Casa-Alex/Input/2010 Cenusus Shapefiles/2010 Census Blocks/'    
 WAC_INFILE = 'E:/Transit-Casa-Alex/Input/LEHD Census Blocks/2014/WAC/Original/ca_wac_S000_JT00_2014.csv'
 RAC_INFILE = 'E:/Transit-Casa-Alex/Input/LEHD Census Blocks/2014/RAC/Original/ca_rac_S000_JT00_2014.csv'
@@ -12,6 +13,17 @@ COUNTYFIPS = ['075','081']
 OUTFILE_START = 'E:\Transit-Casa-Alex\Input\LEHD Census Blocks/' 
 OUTFILE_SHAPE_START = 'E:\Transit-Casa-Alex\Input\LEHD Census Blocks/' 
 YEAR = 2014
+=======
+CENSUS_BLOCK_SHAPEFILE_START = 'E:/Transit-Casa-Alex/Input/2010 Census Blocks/'    
+WAC_INFILE = 'E:/Transit-Casa-Alex/Input/LEHD Census Blocks/WAC/Original/ca_wac_S000_JT00_2009.csv'
+RAC_INFILE = 'E:/Transit-Casa-Alex/Input/LEHD Census Blocks/RAC/Original/ca_rac_S000_JT00_2009.csv'
+
+#eventually have a shapefile of the entire state and select out only the counties of interest
+COUNTYFIPS = ['075','081']
+OUTFILE_START = 'E:\Transit-Casa-Alex\Input\LEHD Census Blocks\San Mateo COUNTY/' 
+OUTFILE_SHAPE_START = 'E:\Transit-Casa-Alex\Input\LEHD Census Blocks\San Mateo COUNTY/' 
+
+>>>>>>> 6e43ba4dca69e340b79d1a3d9b929f6bae11c8f8
 DROP_LEHD_RAC = ['C000', 
     'CA01', 
     'CA02', 
@@ -119,6 +131,7 @@ DROP_CENSUS = ['INTPTLAT10',
 'UR10',
 'FUNCSTAT10']
 
+<<<<<<< HEAD
 def clean_ID(row):
     if np.isnan(row['w_geocode']):
         row['BLOCK_ID'] = row['h_geocode']
@@ -131,6 +144,9 @@ def clean_ID(row):
     return row['BLOCK_ID']
 
     
+=======
+
+>>>>>>> 6e43ba4dca69e340b79d1a3d9b929f6bae11c8f8
 def drop_columns(drop_list,df):
     """
     drops out unnecessary columns out of a dataframe 
@@ -159,6 +175,7 @@ def clean_lodes(df):
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     
     year = YEAR
     
@@ -170,6 +187,14 @@ if __name__ == "__main__":
         df = pd.DataFrame()
         df2 = pd.DataFrame()
 
+=======
+
+    for fips in COUNTYFIPS:
+        OUTFILE = OUTFILE_START + fips + '_Employment.csv'
+        OUTFILE_SHAPE = OUTFILE_SHAPE_START +  fips + '_Employment.shp'
+        CENSUS_BLOCK_SHAPEFILE = CENSUS_BLOCK_SHAPEFILE_START + fips + '/tl_2010_06' + fips + '_tabblock10.shp'
+        
+>>>>>>> 6e43ba4dca69e340b79d1a3d9b929f6bae11c8f8
     #read in the required files
         blocks = gp.read_file(CENSUS_BLOCK_SHAPEFILE)
         rac = pd.read_csv(RAC_INFILE)
@@ -182,6 +207,7 @@ if __name__ == "__main__":
     #drop out all of the unnecessary columns
         rac = drop_columns(DROP_LEHD_RAC,rac)
         wac = drop_columns(DROP_LEHD_WAC,wac)
+<<<<<<< HEAD
 
     #change the geoid column from a string to an int
         blocks['GEOID10'] = blocks.GEOID10.apply(lambda row: int(row))
@@ -209,3 +235,22 @@ if __name__ == "__main__":
     combined.to_csv('E:\Transit-Casa-Alex\Input\LEHD Census Blocks/2014/Combined Employment.csv')
     
     print('ALL DONE TIME FOR A BEER')
+=======
+        
+        #change the geoid column from a string to an int
+        blocks['GEOID10'] = blocks.GEOID10.apply(lambda row: int(row))
+    #merge all of the datasets together
+        df = pd.merge(blocks,wac,how = 'left',left_on = 'GEOID10',right_on = 'w_geocode')
+        df = pd.merge(df,rac,how = 'left',left_on = 'GEOID10',right_on = 'h_geocode',suffixes =('_WAC','_RAC'))
+        
+        #eventually will need to select by county see comment above next to County FIPS constant 
+      #  df = df[df['COUNTYFP10'] == COUNTYFIPS ]
+      
+    #write the dataframe to a csv
+        df.to_csv(OUTFILE)
+        
+        #write a shapefile of the data 
+        shape = gp.GeoDataFrame(df)
+        shape.to_file(OUTFILE_SHAPE, driver = 'ESRI Shapefile')
+        print('ALL DONE TIME FOR A BEER')
+>>>>>>> 6e43ba4dca69e340b79d1a3d9b929f6bae11c8f8
