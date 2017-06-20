@@ -1,9 +1,10 @@
 import pandas as pd
 import geopandas as gp
 import geocoder
+import numpy as np
 from shapely.geometry import Point
 
-YEARS = [2009,2011,2012,2013,2014,2015]
+YEARS = [2009,2011,2012,2013,2014]
 HOUSING_CSV_BASE = 'E:\Transit-Casa-Alex\Input\Housing Inventory/'
 CENSUS_BLOCKS = 'E:/Transit-Casa-Alex/Input/2010 Cenusus Shapefiles/2010 Census Blocks/075/tl_2010_06075_tabblock10.shp'
 
@@ -20,7 +21,7 @@ def combine_address(row):
     return address
 
 
-def geocode(df):
+def geocode(df,year):
     """
     A funtion that sets the geometry column of a dataframe by geocoding street addresses.
     
@@ -28,8 +29,15 @@ def geocode(df):
     """
     #this tests if I have reached the query limit
     print(geocoder.google(df['ADDRESS'][0]))
-    df['LAT'] = df['ADDRESS'].apply(lambda value: geocoder.google(value).lat)
-    df['LON'] = df['ADDRESS'].apply(lambda value:  geocoder.google(value).lng)
+    
+    if year == 2015:
+        df['LAT'] = df['Y']
+        df['LON'] = df['X']
+        
+    elif year != 2015:    
+        df['LAT'] = df['ADDRESS'].apply(lambda value: geocoder.google(value).lat)
+        df['LON'] = df['ADDRESS'].apply(lambda value: geocoder.google(value).lng)
+        
     df['geometry'] = [Point(xy) for xy in zip(df.LON, df.LAT)]
     
     return df
@@ -48,7 +56,8 @@ def attach_changes(changes,blocks):
 
 
 if __name__ == "__main__":
-
+    df2 = gp.GeoDataFrame()
+    change_final = gp.GeoDataFrame()
     for year in YEARS:
         changes = pd.read_csv(HOUSING_CSV_BASE + str(year) + '_Housing_Inventory.csv')
         blocks = gp.read_file(CENSUS_BLOCKS)
@@ -82,27 +91,34 @@ if __name__ == "__main__":
             
         elif year == 2015:
             changes['STDADDRESS'] = changes['Address']
+             
         else:
             print('Bad Year!')
-            
+        
         changes['ADDRESS'] = changes.apply(lambda row: combine_address(row),axis = 1)
-        changes = geocode(changes)
+        changes = geocode(changes,year)
+        
+        #had to filter out rows that had missing/bad addresses which produced unusable lat longs
+       
+        drop = changes[np.isnan(changes['LAT']) | np.isnan(changes['LON'])]
+        print(drop)
+        #changes = changes.drop(drop.index,axis = 0)
         
         changes = gp.GeoDataFrame(changes)
-        
-        #print(changes.crs)
-        #print(blocks.crs)
-        
         changes.crs = {'init':'epsg:4326'}
         changes = changes.to_crs({'init':'epsg:4269'})
-        #print(changes.crs)
-        changes.to_file( 'E:\Transit-Casa-Alex\Output\Housing Inventory/' + str(year) + '_housing_units_change.shp',driver = 'ESRI Shapefile')
         
-
-        df = attach_changes(changes,blocks)
-        df.to_csv('E:\Transit-Casa-Alex\Output\Housing Inventory/' + str(year) + '_HU_Changes.csv')
-        df.to_file('E:\Transit-Casa-Alex\Output\Housing Inventory/' + str(year) + '_housing_units_change.shp',driver = 'ESRI Shapefile')
-        print('Completed Year ' + str(year))
+        change_final = change_final.append(changes)
+        
+        
+        changes.to_file( 'E:\Transit-Casa-Alex\Output\Housing Inventory/' + str(year) + '_housing_units_change.shp',driver = 'ESRI Shapefile')
+    df = attach_changes(changes,blocks)
+    df.to_csv('E:\Transit-Casa-Alex\Output\Housing Inventory/' + str(year) + '_HU_Changes.csv')
+    df = gp.GeoDataFrame(df)
+    df2 = df2.append(df)
+    df2.to_file('E:\Transit-Casa-Alex\Output\Housing Inventory/' + str(year) + '_housing_units_change.shp',driver = 'ESRI Shapefile')
+    change_final.to_file('E:\Transit-Casa-Alex\Output\Housing Inventory/Net_Change_' + str(year[0]) + '_to_' + str(year[-1]) + '.shp',driver = 'ESRI Shapefile')
+    print('Completed Year ' + str(year))
 
         
             

@@ -1,21 +1,21 @@
 import pandas as pd
 import geopandas as gp
 
-SPLIT_BUFFER_PATHS = ['E:/Transit-Casa-Alex/Output/Buffers/Split Buffers/2010_Split_Buffers_Tenth.shp',
-'E:/Transit-Casa-Alex/Output/Buffers/Split Buffers/2010_Split_Buffers_Quarter.shp', 
-'E:/Transit-Casa-Alex/Output/Buffers/Split Buffers/2010_Split_Buffers_Third.shp']
+SPLIT_BUFFER_PATHS = ['E:/Transit-Casa-Alex/Output/Buffers/Split Buffers/2010_Split_Buffers_Tenth.csv',
+'E:/Transit-Casa-Alex/Output/Buffers/Split Buffers/2010_Split_Buffers_Quarter.csv', 
+'E:/Transit-Casa-Alex/Output/Buffers/Split Buffers/2010_Split_Buffers_Third.csv']
 
 KEEP = ['EDHLTH_RAC_SCALED', 'EDHLTH_WAC_SCALED',
        'EMP_RAC_SCALED', 'EMP_WAC_SCALED', 'LEISER_RAC_SCALED',
        'LEISER_WAC_SCALED', 'OTHER_RAC_SCALED', 'OTHER_WAC_SCALED',
        'RETAIL_RAC_SCALED', 'RETAIL_WAC_SCALED', 'POP10_SCALED',
-       'HOUSING10_SCALED','STOP_ID']
+       'HOUSING10_SCALED','HOUSING09_SCALED','STOP_ID']
        
 SCALE_LIST = ['EDHLTH_RAC', 'EDHLTH_WAC',
        'EMP_RAC', 'EMP_WAC', 'LEISER_RAC',
        'LEISER_WAC', 'OTHER_RAC', 'OTHER_WAC',
        'RETAIL_RAC', 'RETAIL_WAC', 'POP10',
-       'HOUSING10']
+       'HOUSING10','HOUSING09']
        
        
 def scale(scale_list,df,keep):
@@ -41,7 +41,16 @@ def scale(scale_list,df,keep):
 if __name__ == "__main__":
     for buffer in SPLIT_BUFFER_PATHS:
         print('Processing buffer ' + str(buffer))
-        split = gp.read_file(buffer)
+        split = pd.read_csv(buffer)
         split_scaled = scale(SCALE_LIST, split, KEEP)
-        split_scaled.to_csv('E:/Transit-Casa-Alex/Output/Census_Block_Estimation_File.csv')
+        
+        print(buffer)
+        if buffer == 'E:/Transit-Casa-Alex/Output/Buffers/Split Buffers/2010_Split_Buffers_Tenth.csv':
+            split_scaled.to_csv('E:/Transit-Casa-Alex/Output/Tenth_Census_Block_Estimation_File.csv')
+        
+        elif buffer == 'E:/Transit-Casa-Alex/Output/Buffers/Split Buffers/2010_Split_Buffers_Third.csv':
+            split_scaled.to_csv('E:/Transit-Casa-Alex/Output/Third_Census_Block_Estimation_File.csv')
+        
+        elif buffer == 'E:/Transit-Casa-Alex/Output/Buffers/Split Buffers/2010_Split_Buffers_Quarter.csv':
+            split_scaled.to_csv('E:/Transit-Casa-Alex/Output/Quarter_Census_Block_Estimation_File.csv')
     print('ALL DONE TIME FOR MONTY PYTHON!')
