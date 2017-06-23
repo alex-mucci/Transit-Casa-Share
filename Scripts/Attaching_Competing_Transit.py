@@ -5,9 +5,9 @@ from shapely.geometry import Point
 
 YEARS = [2009,2016]
 
-BART09_PATH = 'E:/Transit-Casa-Alex/Output/BART/2009/BART_Ridership.csv'
-BART16_PATH = 'E:/Transit-Casa-Alex/Output/BART/2016/BART_Ridership.csv'
-BART_STATIONS_PATH = 'E:/Transit-Casa-Alex/Output/BART/SF-SM_BART_Stations.shp'
+BART09_PATH = 'E:/Transit-Casa-Alex/Output/BART/2009/BART_Intra_SF_Ridership.csv'
+BART16_PATH = 'E:/Transit-Casa-Alex/Output/BART/2016/BART_Intra_SF_Ridership.csv'
+BART_STATIONS_PATH = 'E:/Transit-Casa-Alex/Output/BART/Stations/SF-SM_BART_Stations.shp'
 BART_RENAME = ['STOP_ID', 'geometry', 'BART_FROMS', 'BART_TOS']
 
 
@@ -25,9 +25,8 @@ BIKE16_PATH = 'E:/Transit-Casa-Alex/Input/Bay Area Bike Share/bike_ridership.shp
 BIKE_KEEP = ['STOP_ID', 'geometry', 'Alightings', 'Boardings', 'Dockcount']
 BIKE_RENAME = ['STOP_ID', 'geometry', 'BIKE_ALIGHTINGS', 'BIKE_BOARDINGS', 'BIKE_DOCKCOUNT']
 
-BUFFERS = ['E:/Transit-Casa-Alex/Output/Buffers/Tenth/Buffers_Tenth_GCS.shp',
-           'E:/Transit-Casa-Alex/Output/Buffers/Quarter/Buffers_Quarter_GCS.shp',
-           'E:/Transit-Casa-Alex/Output/Buffers/Third/Buffers_Third_GCS.shp']
+BUFFERS_START = 'E:/Transit-Casa-Alex/Output/Buffers/'
+BUFFER_ENDS = ['/Tenth/Buffers_Tenth_GCS.shp','/Quarter/Buffers_Quarter_GCS.shp','/Third/Buffers_Third_GCS.shp']
 
 
 #this was ran before and so for this script the output of this function is used instead of using the function, but I have the code used to create them before below. It is for creating the 2009 stops
@@ -49,11 +48,17 @@ if __name__ == "__main__":
     
     bart_sta = gp.read_file(BART_STATIONS_PATH)
     cal_sta = gp.read_file('E:/Transit-Casa-Alex/Output/CalTrain/SF_Caltrain_Stations.shp')
-    for buffer in BUFFERS:
-        print('Attaching data to ' + ' buffer ' + str(buffer))
-        buffers = gp.read_file(buffer)
+    for year in YEARS:
 
-        for year in YEARS:
+            
+
+        
+        for buffer_end in BUFFER_ENDS:
+            print('Attaching data to ' + ' buffer ' + str(buffer_end))
+            buffer_path = BUFFERS_START + str(year) + buffer_end
+            buffers = gp.read_file(buffer_path)
+            buffers.crs = {'init':'epsg:4269'}
+
             print('For year ' + str(year))
             if year == 2009:
                 bart = pd.read_csv(BART09_PATH)
@@ -118,14 +123,14 @@ if __name__ == "__main__":
                 transit = bart.merge(cal.drop('geometry',axis = 1),on = 'STOP_ID',how = 'outer').merge(muni.drop('geometry',axis =1),on = 'STOP_ID',how = 'outer').merge(bike.drop('geometry',axis = 1),on = 'STOP_ID',how ='outer')
 
             #name the combined competing transit file based on the buffer size it is associated with
-            if buffer == 'E:/Transit-Casa-Alex/Output/Buffers/Tenth/Buffers_Tenth_GCS.shp':
+            if buffer_end == BUFFER_ENDS[0]:
                 print('Finished Tenth')
-                transit.to_csv('E:/Transit-Casa-Alex/Output/Buffer Data/Competing Transit Buffers/' +str(year) + '/Tenth_Competing_Transit.csv')
-            if buffer == 'E:/Transit-Casa-Alex/Output/Buffers/Third/Buffers_Third_GCS.shp':
+                transit.to_csv('E:/Transit-Casa-Alex/Output/Final Data/' +str(year) + '/Competing Transit Buffers/Tenth_Competing_Transit.csv')
+            if buffer_end == BUFFER_ENDS[1]:
                 print('Finished Third')
-                transit.to_csv('E:/Transit-Casa-Alex/Output/Buffer Data/Competing Transit Buffers/' +str(year) + '/Third_Competing_Transit.csv')
-            if buffer == 'E:/Transit-Casa-Alex/Output/Buffers/Quarter/Buffers_Quarter_GCS.shp':
+                transit.to_csv('E:/Transit-Casa-Alex/Output/Final Data/' +str(year) + '/Competing Transit Buffers/Third_Competing_Transit.csv')
+            if buffer_end == BUFFER_ENDS[2]:
                 print('Finished Quarter')
-                transit.to_csv('E:/Transit-Casa-Alex/Output/Buffer Data/Competing Transit Buffers/' +str(year) + '/Quarter_Competing_Transit.csv')
+                transit.to_csv('E:/Transit-Casa-Alex/Output/Final Data/' +str(year) + '/Competing Transit Buffers/Quarter_Competing_Transit.csv')
             
     print('ALL DONE TIME FOR SOME HALO!!')

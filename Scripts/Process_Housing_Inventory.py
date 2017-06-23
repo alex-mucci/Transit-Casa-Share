@@ -4,7 +4,7 @@ import geocoder
 import numpy as np
 from shapely.geometry import Point
 
-YEARS = [2009,2011,2012,2013,2014]
+YEARS = [2009]
 HOUSING_CSV_BASE = 'E:\Transit-Casa-Alex\Input\Housing Inventory/'
 CENSUS_BLOCKS = 'E:/Transit-Casa-Alex/Input/2010 Cenusus Shapefiles/2010 Census Blocks/075/tl_2010_06075_tabblock10.shp'
 
@@ -117,7 +117,8 @@ if __name__ == "__main__":
     df = gp.GeoDataFrame(df)
     df2 = df2.append(df)
     df2.to_file('E:\Transit-Casa-Alex\Output\Housing Inventory/' + str(year) + '_housing_units_change.shp',driver = 'ESRI Shapefile')
-    change_final.to_file('E:\Transit-Casa-Alex\Output\Housing Inventory/Net_Change_' + str(year[0]) + '_to_' + str(year[-1]) + '.shp',driver = 'ESRI Shapefile')
+    change_final.to_file('E:\Transit-Casa-Alex\Output\Housing Inventory/Net_Change_'+ str(year) + '.shp',driver = 'ESRI Shapefile')
+    change_final.to_file('E:\Transit-Casa-Alex\Output\Housing Inventory/Net_Change_'+ str(year) + '.shp',driver = 'ESRI Shapefile')
     print('Completed Year ' + str(year))
 
         

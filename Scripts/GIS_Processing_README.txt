@@ -21,9 +21,7 @@ Competiting Transit Data
 
 ** Eventually need to run intersections of each of the data files and the buffers. Then calculate areas of the smaller intersected polygons and scale the original data by the interseted area/original area. 
 Ex. half of a census block's area is overlapping with a buffer, then half of the original employment/population/ect. is assigned to the new polygon created within the buffer by the intersection.
-<<<<<<< HEAD
+
 Lastly a spatial join (intersect) is ran to add the intersected polygons that are within the buffers to the buffers, making sure to sum all of the data fields of interest. 
 *** Scaling the data by area within a buffer has been accomplished as of 6/15/17
-=======
-Lastly a spatial join (intersect) is ran to add the intersected polygons that are within the buffers to the buffers, making sure to sum all of the data fields of interest. 
->>>>>>> 6e43ba4dca69e340b79d1a3d9b929f6bae11c8f8
+
