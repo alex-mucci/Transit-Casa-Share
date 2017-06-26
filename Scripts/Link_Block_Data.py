@@ -8,12 +8,13 @@ CENSUS_DATA_START = 'E:/Transit-Casa-Alex/Output/Housing Units/'
 CENSUS_DATA_END = '/SF_Housing.shp'
 
 LEHD_DATA_START = 'E:/Transit-Casa-Alex/Output/LEHD/'
+LEHD_DATA_START = 'E:/Transit-Casa-Alex/Output/LEHD/'
 LEHD_DATA_END = '/SF_Employment.csv'
 
 CSV_OUTFILE = 'E:/Transit-Casa-Alex/Output/Census Block Data/Census_Block_Data.csv'
 SHP_OUTFILE = 'E:/Transit-Casa-Alex/Output/Census Block Data/Census_Block_Data.shp'
 
-
+KEEP = 'BLOCKID10','HOUSING16','BLOCK_ID','EDHLTH_RAC_1','EMP_WAC_16'
 
 def link_census_data(pop,emp):
     """
@@ -28,7 +29,6 @@ def link_census_data(pop,emp):
     pop['ALAND10'] = pop['geometry'].area
 
     pop.BLOCKID10 = pop.BLOCKID10.astype(float)
-    #emp.GEOID10 = emp.GEOID10.astype(float)
 
     df = pop.merge(emp, how = 'left', left_on = 'BLOCKID10', right_on = 'BLOCK_ID')
 
@@ -87,6 +87,7 @@ if __name__ == "__main__":
     print('Creating and Saving the Geodataframe!')
     geo = create_geo(df)
     
+
     df.to_csv(CSV_OUTFILE)
     geo.to_file(SHP_OUTFILE,driver = 'ESRI Shapefile')
     

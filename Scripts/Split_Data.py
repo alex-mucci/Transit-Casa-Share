@@ -17,7 +17,6 @@ OUTFILE_SHP_END = ['/Split Buffers/Split_Buffers_Tenth.shp', '/Split Buffers/Spl
 
 YEARS = [2009,2016]
 
-
 def blocks_area(blocks):
     """
     function to calculate the area (in acres) of census blocks 
