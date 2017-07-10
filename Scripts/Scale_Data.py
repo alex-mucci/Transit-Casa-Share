@@ -1,7 +1,7 @@
 import pandas as pd
 import geopandas as gp
 
-START_BUFFER_PATHS = ['E:/Transit-Casa-Alex/Output/Buffers/Split Buffers/','E:/Transit-Casa-Alex/Output/Buffers/Split Buffers/', 'E:/Transit-Casa-Alex/Output/Buffers/Split Buffers/']
+START_BUFFER_PATHS = ['E:/Transit-Casa-Alex/Output/Buffers/','E:/Transit-Casa-Alex/Output/Buffers/', 'E:/Transit-Casa-Alex/Output/Buffers/']
 
 YEAR = 2016
 
@@ -9,14 +9,14 @@ YEAR = 2016
 KEEP09 = ['EDHLTH_RAC_SCALED', 'EDHLTH_WAC_SCALED',
        'EMP_RAC_SCALED', 'EMP_WAC_SCALED', 'LEISER_RAC_SCALED',
        'LEISER_WAC_SCALED', 'OTHER_RAC_SCALED', 'OTHER_WAC_SCALED',
-       'RETAIL_RAC_SCALED', 'RETAIL_WAC_SCALED', 'POP10_SCALED',
-       'HOUSING10_SCALED','HOUSING09_SCALED','STOP_ID']
+       'RETAIL_RAC_SCALED', 'RETAIL_WAC_SCALED',
+       'HOUSING_09_SCALED','STOP_ID']
        
 SCALE_LIST09 = ['EDHLTH_RAC', 'EDHLTH_WAC',
        'EMP_RAC', 'EMP_WAC', 'LEISER_RAC',
        'LEISER_WAC', 'OTHER_RAC', 'OTHER_WAC',
-       'RETAIL_RAC', 'RETAIL_WAC', 'POP10',
-       'HOUSING10','HOUSING09']
+       'RETAIL_RAC', 'RETAIL_WAC',
+       'HOUSING_09']
  
 KEEP16 = ['EDHLTH_RAC_SCALED', 'EDHLTH_WAC_SCALED',
        'EMP_RAC_SCALED', 'EMP_WAC_SCALED', 'LEISER_RAC_SCALED',
@@ -53,8 +53,8 @@ def scale(scale_list,df,keep):
 if __name__ == "__main__":
     year = YEAR
     
-    buffers = [START_BUFFER_PATHS[0] + str(year) + '/' + str(year) + '_Split_Buffers_Tenth.csv',START_BUFFER_PATHS[1] + str(year) + '/' + str(year) + '_Split_Buffers_Quarter.csv',
-               START_BUFFER_PATHS[2] + str(year) + '/' + str(year) + '_Split_Buffers_Third.csv']
+    buffers = [START_BUFFER_PATHS[0] + str(year) + '/Split Buffers/Split_Buffers_Tenth.csv',START_BUFFER_PATHS[1] + str(year) + '/Split Buffers/Split_Buffers_Quarter.csv',
+               START_BUFFER_PATHS[2] + str(year) + '/Split Buffers/Split_Buffers_Third.csv']
                
     for buffer in buffers:
         print('Processing buffer ' + str(buffer))
