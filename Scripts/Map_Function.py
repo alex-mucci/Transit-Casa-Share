@@ -167,7 +167,7 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
 
 
     #sets the map zoomed into san fran with a scale bar
-    mapa = folium.Map([37.769   , -122.45],
+    mapa = folium.Map([37.765   , -122.45],
                   zoom_start=13,
                   tiles='cartodbpositron',
                   control_scale = True)
@@ -380,8 +380,8 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
                 pop_up = folium.Popup(iframe, max_width=2650)
 
                 folium.CircleMarker([row[1]["LAT"], row[1]["LON"]], 
-                                    color='#efff67',
-                                    fill_color='#efff67', 
+                                    color='#ffd2b3',
+                                    fill_color='#ffd2b3', 
                                     radius= 3,
                                     fill_opacity = 0.3, popup=pop_up).add_to(tenth_group)
                                     
@@ -405,8 +405,8 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
                 pop_up = folium.Popup(iframe, max_width=2650)
             
                 folium.CircleMarker([row[1]["LAT"], row[1]["LON"]], 
-                    color='#efff67',
-                    fill_color='#efff67', 
+                    color='#ffd2b3',
+                    fill_color='#ffd2b3', 
                     radius= 5,
                     fill_opacity = 0.3, popup=pop_up).add_to(quarter_group)
                      
@@ -431,8 +431,8 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
                 pop_up = folium.Popup(iframe, max_width=2650)
                 
                 folium.CircleMarker([row[1]["LAT"], row[1]["LON"]], 
-                    color='#efff67',
-                    fill_color='#efff67', 
+                    color='#ffd2b3',
+                    fill_color='#ffd2b3', 
                     radius= 7,
                     fill_opacity = 0.3, popup=pop_up).add_to(third_group)
                      
