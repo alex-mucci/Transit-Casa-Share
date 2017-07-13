@@ -1,59 +1,82 @@
 import pandas as pd
 import geopandas as gp
-import sys
-sys.path.append('E:\Transit-Casa-Alex\Scripts')
-import Clean_Lodes
 
-#Path to competing bus stops buffer data
-TRANS_PATH = 'E:\Transit-Casa-Alex\Output\Buffers\Tenth\Competing Treansit Buffers/Competing_Transit.csv'
+BUFFERS = ['Tenth','Quarter','Third']
+YEARS = ['2009','2016']
+
+PATH_START = 'E:/Transit-Casa-Alex/Output/Final Data/'
+OUTFILE_START = 'E:/Transit-Casa-Alex/Output/Modeling'
 
 
-#Path to the acs buffer data csv file
-ACS_PATH = 'E:\Transit-Casa-Alex\Output\Buffers\Tenth\Buffers_ACS/Buffers_ACS.csv'
 
-#Path to the LEHD and Census buffer data csv file
-LEHD_PATH = 'E:/Transit-Casa-Alex/Output/Buffers/Tenth/Census Data Buffers/Normalized to per Acre/Census_Buffers_Acres.csv'
-
-#Path to the Bus performance data H5 file
-BUS_PATH = 'E:/Transit_Casa/Output/sfmuni_monthly_ts.h5'
-
-#Date Range of bus data that needs to be pulled 
-DATE_RANGE = '2009-01-01', '2009-12-01'
-
-#Outfile path to write the merge table to a csv
-OUTFILE = 'E:\Transit-Casa-Alex\Output\Modeling/Buffer10_Data.csv'
-
-DROP_LIST = ['STOP_LAT_y', 'STOP_LON_y','Unnamed: 0','ORIG_FID','BUFF_DIST_y','geometry_y',
-        'STOP_LAT_x', 'STOP_LON_x','BUFF_DIST','ALAND10']
-
-def link_buffer_data(acs,lehd,bus,trans):
+def link_buffer_data(acs,bus,park,trans,census,comp,edd):
+    """
+    function to link all of the buffer data together. Starts with the bus dataframe so that only the stops that have ridership data are kept.
+    
+    acs = dataframe with acs data 
+    bus = dataframe with bus data
+    park = dataframe with parking data
+    trans = dataframe with competing transit dataframe
+    census = dataframe with census block data
+    comp = dataframe with competing stops data
+    census = geodataframe with edd data
+    
+    """
     df = pd.merge(bus,acs,how = 'left', on = 'STOP_ID')
-    df = pd.merge(df,lehd,how = 'left',on = 'STOP_ID',suffixes = ('','_y'))
+    df = pd.merge(df,park,how = 'left',on = 'STOP_ID',suffixes = ('','_a'))
+    df = pd.merge(df,trans,how = 'left',on = 'STOP_ID',suffixes = ('','_b'))
+    df = pd.merge(df,census,how = 'left',on = 'STOP_ID',suffixes = ('','_c'))
+    df = pd.merge(df,comp,how = 'left',on = 'STOP_ID',suffixes = ('','_d'))
+    df = pd.merge(df,edd,how = 'left',on = 'STOP_ID',suffixes = ('','_e'))
+    
     return df
     
     
 if __name__ == "__main__":
+    for year in YEARS:
+        path = PATH_START + year
+        acs_path = path + '/ACS_DATA.csv'
+        bus_path = path + '/Bus Performance Data.csv'
+        park_path = path + '/Parking_Demand.csv'
+        
+        acs = pd.read_csv(acs_path)
+        acs = acs.drop('Unnamed: 0',axis = 1)
+        bus = pd.read_csv(bus_path)
+        bus = bus.drop('Unnamed: 0',axis = 1)
+        park = pd.read_csv(park_path)
+        park = park.drop('Unnamed: 0',axis = 1)
     
-    #read in the data
-    acs = pd.read_csv(ACS_PATH)
-    lehd = pd.read_csv(LEHD_PATH)
-    trans = pd.read_csv(TRANS_PATH)
-    
-    #in the future: will need to change the data range if I am running this for other time periods
-    store = pd.HDFStore(BUS_PATH)
-    bus = store.get('stop_day')
-    bus = bus[bus["MONTH"].isin(pd.date_range('2009-01-01', '2009-12-01'))]
+        for buffer in BUFFERS:
+            trans_path = path + '/Competing Transit Buffers/' + buffer + '_Competing_Transit.csv'
+            census_path = path + '/Census Block Buffers/' + buffer + '_Census_Block_Estimation_File.csv'
+            comp_path = path + '/Competing Stops Buffers/' + buffer + '_Comp_Bus_Stops.csv'
+            edd_path = path + '/EDD Buffers/' + buffer + '_EDD.shp'
+            
+            
+            trans = pd.read_csv(trans_path)
+            trans = trans.drop('Unnamed: 0',axis = 1)
+            census = pd.read_csv(census_path)
+            census = census.drop('Unnamed: 0',axis = 1)
+            comp = pd.read_csv(comp_path)
+            comp = comp.drop('Unnamed: 0',axis = 1)
+            edd = gp.read_file(edd_path)
 
-    #drop out the random unnamed column (old index maybe)
-    lehd = lehd.drop('Unnamed: 0', axis = 1)
-    
-    #merge all of the data together
-    data = link_buffer_data(acs,lehd,bus,trans)
-    
-    #drop out the extra columns that are not of interest
-    Clean_Lodes.drop_columns(DROP_LIST,data)
-    
-    #write the table to a csv 
-    data.to_csv(OUTFILE)
-    
+
+
+            #merge all of the data together
+            data = link_buffer_data(acs,bus,park,trans,census,comp,edd)
+            
+            outfile_csv = OUTFILE_START + '/' + year + '/' + buffer + '_Data.csv'
+            outfile_shp = OUTFILE_START + buffer + '_Data.shp'
+            
+            #write the table to a csv 
+            data.to_csv(outfile_csv)
+            
+            
+            #later need to find a way to save a shapefile of the data too, so that it is easy to overlay on a map in ArcGIS and verify the data
+            
+            #data = edd[['STOP_ID','geometry']].merge(data, on = 'STOP_ID', how = 'left')
+            #data = gp.GeoDataFrame(data,crs = edd.crs,geometry = 'geometry_x')
+            #data.to_file(outfile_shp, driver = 'ESRI Shapefile')
+            
     print('ALL DONE TIME FOR A BEER!')

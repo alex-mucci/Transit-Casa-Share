@@ -167,7 +167,7 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
 
 
     #sets the map zoomed into san fran with a scale bar
-    mapa = folium.Map([37.765   , -122.45],
+    mapa = folium.Map([37.765, -122.45],
                   zoom_start=13,
                   tiles='cartodbpositron',
                   control_scale = True)
@@ -286,13 +286,15 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
                                          fill_color='DarkGray', 
                                          radius= 5,
                                          fill_opacity = 0.3, popup=pop_up).add_to(good_group) 
-                                         
-                                     
-                                     
+
+            
     #based on percent difference map the bus stop ranging from dark green (high % gain) to light green (medium % gain) to grey (low % gain/loss) to light red (low % loss) to dark red (high % loss)  
         else:
-            #takes care of a bug when there is a stop name in one year but not the other
-
+            #takes care of a bug when there is a stop name in one year but not the other and a bug of having an infinite percent difference when the base year is zero 
+            if row[base] == 0:
+                row[base] = 0.00001              
+                row[colmn_per] = ((row[future] - row[base])/row[base])*100
+                
             if pd.isnull(row['STOP_NAME_09']):
                 row['STOP_NAME_09'] = 'Missing '
             elif pd.isnull(row['STOP_NAME_16']):
@@ -306,7 +308,7 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
                 <br>
                 2016 Name: """ + row['STOP_NAME_16'] + """ </p> 
                 <p> 
-                Percent Difference: """ + str(round(row[colmn_diff])) + """%
+                Percent Difference: """ + str(round(row[colmn_per])) + """%
                 <br>
                 Difference: """ + str(round(row[colmn_diff])) + """
                 </p>
@@ -330,115 +332,120 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
     missing16_group.add_to(mapa)
     missing_both_group.add_to(mapa)
     good_group.add_to(mapa)
+   
     
     
-    
-    
-    
-    
+
     
     
     #This section is completely separate. To have the layer control work correctly all layers had to be added at the same time. 
 
     
     print('Processing Competing Transit!')
-    for buffer in BUFFERS:
+  
+    buffer = 'Tenth'
+    transit09 = pd.read_csv(TRANSIT_START09 + buffer + '_Mapping_Comp_Transit.csv', thousands = ',')
+    transit16 = pd.read_csv(TRANSIT_START16 + buffer + '_Mapping_Comp_Transit.csv', thousands = ',')
+    merged_transit = pd.merge(transit09,transit16,how = 'outer',on = 'STOP_ID',suffixes =('_09','_16'))
+    merged_transit['STOP_ID'] = merged_transit['STOP_ID'].astype(str)
+    transit = pd.merge(merged_transit, df[['STOP_ID','LAT','LON']],how = 'left',on = 'STOP_ID')
+    
+    #had to convert BART data from strings to integers
+    
+    transit['BART_FROMS_09'] = transit['BART_FROMS_09'].apply(lambda value: float(value))
+    transit['BART_FROMS_16'] = transit['BART_FROMS_16'].apply(lambda value: float(value))
+    
+    transit['bart_diff'] = round(transit['BART_FROMS_09'] - transit['BART_FROMS_16'])
+    transit['muni_diff'] = round(transit['MUNI_RAIL_BOARDINGS_09'] - transit['MUNI_RAIL_BOARDINGS_16'])
+    transit['cal_diff'] = round(transit['CALTRAIN_ON_09'] - transit['CALTRAIN_ON_16'])
+   
+   
+    quarter_group = folium.FeatureGroup(name = 'Competing Transit (Quarter-Mile Buffers)')
+    for row in transit.iterrows():
+        html ="""<h2> STOP: """ + str(row[1]['STOP_ID']) + """ </h2> <br>
+        BART Difference: """ + str(row[1]['bart_diff']) + """ <br>
+        MUNI Rail Difference: """ + str(row[1]['muni_diff']) + """ <br>
+        CalTrain Difference: """ + str(row[1]['cal_diff']) + """ <br>
+        <br>
+        <br>
+        2009 BART Boardings: """ + str(row[1]['BART_FROMS_09']) + """ <br>
+        2009 CalTrain Boardings: """ + str(row[1]['CALTRAIN_ON_09']) + """ <br>
+        2009 MUNI Rail Boardings: """ + str(row[1]['MUNI_RAIL_BOARDINGS_09']) + """ <br> 
+        <br>
+        2016 BART Boardings: """ + str(row[1]['BART_FROMS_16']) + """ <br>
+        2016 CalTrain Boardings: """ + str(row[1]['CALTRAIN_OFF_16']) + """ <br>
+        2016 MUNI Rail Boardings: """ + str(row[1]['MUNI_RAIL_BOARDINGS_16']) + """ <br> """ 
+        iframe = folium.IFrame(html=html, width=300, height=150)
+        pop_up = folium.Popup(iframe, max_width=2650)
+    
+        folium.CircleMarker([row[1]["LAT"], row[1]["LON"]], 
+            color='#ffd2b3',
+            fill_color='#ffd2b3', 
+            radius= 5,
+            fill_opacity = 0.3, popup=pop_up).add_to(quarter_group)
+                 
+                 
+                 
+                 
+     #added in the bart stations here
+    print('Adding BART Stations!')
+    
+    bart_group = folium.FeatureGroup(name = 'BART Stations')
+    bart = pd.read_csv('E:/Transit-Casa-Alex/Output/BART/Map Data/Map_Data.csv',thousands = ',')
+    
+    for row in bart.iterrows():
         
-        transit09 = pd.read_csv(TRANSIT_START09 + buffer + '_Mapping_Comp_Transit.csv', thousands = ',')
-        transit16 = pd.read_csv(TRANSIT_START16 + buffer + '_Mapping_Comp_Transit.csv', thousands = ',')
-        merged_transit = pd.merge(transit09,transit16,how = 'outer',on = 'STOP_ID',suffixes =('_09','_16'))
-        merged_transit['STOP_ID'] = merged_transit['STOP_ID'].astype(str)
-        transit = pd.merge(merged_transit, df[['STOP_ID','LAT','LON']],how = 'left',on = 'STOP_ID')
+        html ="""<h2> STOP: """ + str(row[1]['STATION']) + """ </h2> <br>
+        BART Difference: """ + str(row[1]['FROM_DIFF']) + """ <br>
+        BART Percent Difference: """ + row[1]['FROM_P_DIFF_STR'] + """
+        <br>
+        <br>
+        2009 BART Boardings: """ + str(row[1]['Froms_09']) + """ <br>
+        2016 BART Boardings: """ + str(row[1]['Froms_16'])
         
-        #had to convert BART data from strings to integers
+        iframe = folium.IFrame(html=html, width=300, height=150)
+        pop_up = folium.Popup(iframe, max_width=2650)
+    
+        folium.CircleMarker([row[1]["LAT"], row[1]["LON"]], 
+            color= col_func(row[1]['FROM_P_DIFF']),
+            fill_color = col_func(row[1]['FROM_P_DIFF']), 
+            radius= rad_func(row[1]['FROM_DIFF']),
+            fill_opacity = 0.3, popup=pop_up).add_to(bart_group)
+    
+    
+    
+    
+     #added in the MUNI Rail stations here. Only the stations that operate in both years are shown. (Drops out about 10 stops)
+    print('Adding MUNI Rail Stations!')
+    
+    rail_group = folium.FeatureGroup(name = 'MUNI Rail Stations')
+    rail = pd.read_csv('E:/Transit-Casa-Alex/Output/Processed MUNI Rail/MUNI_Rail_Map_Data.csv',thousands = ',')
+    
+    for row in rail.iterrows():
         
-        transit['BART_FROMS_09'] = transit['BART_FROMS_09'].apply(lambda value: float(value))
-        transit['BART_FROMS_16'] = transit['BART_FROMS_16'].apply(lambda value: float(value))
+        html ="""<h2> STOP: """ + str(row[1]['STOP_ID']) + """ </h2> <br>
+        Stop Name: """ +row[1]['STOP_NAME'] + """ <br>
+        RAIL Difference: """ + str(row[1]['DIFF']) + """ <br>
+        RAIL Percent Difference: """ + row[1]['P_DIFF_STR'] + """
+        <br>
+        <br>
+        2009 RAIL Boardings: """ + str(int(row[1]['Boardings_09'])) + """ <br>
+        2016 RAIL Boardings: """ + str(int(row[1]['Boardings_16']))
         
-        transit['bart_diff'] = round(transit['BART_FROMS_09'] - transit['BART_FROMS_16'])
-        transit['muni_diff'] = round(transit['MUNI_RAIL_BOARDINGS_09'] - transit['MUNI_RAIL_BOARDINGS_16'])
-        transit['cal_diff'] = round(transit['CALTRAIN_ON_09'] - transit['CALTRAIN_ON_16'])
-       
-        print('Processing Buffer ' + buffer)
-        if buffer == 'Tenth':
-            tenth_group = folium.FeatureGroup(name = 'Competing Transit (Tenth-Mile Buffers)')
-            
-            for row in transit.iterrows():     
-                html ="""<h2> STOP: """ + str(row[1]['STOP_ID']) + """ </h2> <br>
-                BART Difference: """ + str(row[1]['bart_diff']) + """ <br>
-                MUNI Rail Difference: """ + str(row[1]['muni_diff']) + """ <br>
-                CalTrain Difference: """ + str(row[1]['cal_diff']) + """ <br>
-                <br>
-                <br>
-                2009 BART Boardings: """ + str(row[1]['BART_FROMS_09']) + """ <br>
-                2009 CalTrain Boardings: """ + str(row[1]['CALTRAIN_ON_09']) + """ <br>
-                2009 MUNI Rail Boardings: """ + str(row[1]['MUNI_RAIL_BOARDINGS_09']) + """ <br> <br>
-                2016 BART Boardings: """ + str(row[1]['BART_FROMS_16']) + """ <br>
-                2016 CalTrain Boardings: """ + str(row[1]['CALTRAIN_OFF_16']) + """ <br>
-                2016 MUNI Rail Boardings: """ + str(row[1]['MUNI_RAIL_BOARDINGS_16']) + """ <br> """ 
-                iframe = folium.IFrame(html=html, width=300, height=150)
-                pop_up = folium.Popup(iframe, max_width=2650)
-
-                folium.CircleMarker([row[1]["LAT"], row[1]["LON"]], 
-                                    color='#ffd2b3',
-                                    fill_color='#ffd2b3', 
-                                    radius= 3,
-                                    fill_opacity = 0.3, popup=pop_up).add_to(tenth_group)
-                                    
-        elif buffer == 'Quarter':
-            quarter_group = folium.FeatureGroup(name = 'Competing Transit (Quarter-Mile Buffers)')
-            for row in transit.iterrows():
-                html ="""<h2> STOP: """ + str(row[1]['STOP_ID']) + """ </h2> <br>
-                BART Difference: """ + str(row[1]['bart_diff']) + """ <br>
-                MUNI Rail Difference: """ + str(row[1]['muni_diff']) + """ <br>
-                CalTrain Difference: """ + str(row[1]['cal_diff']) + """ <br>
-                <br>
-                <br>
-                2009 BART Boardings: """ + str(row[1]['BART_FROMS_09']) + """ <br>
-                2009 CalTrain Boardings: """ + str(row[1]['CALTRAIN_ON_09']) + """ <br>
-                2009 MUNI Rail Boardings: """ + str(row[1]['MUNI_RAIL_BOARDINGS_09']) + """ <br> 
-                <br>
-                2016 BART Boardings: """ + str(row[1]['BART_FROMS_16']) + """ <br>
-                2016 CalTrain Boardings: """ + str(row[1]['CALTRAIN_OFF_16']) + """ <br>
-                2016 MUNI Rail Boardings: """ + str(row[1]['MUNI_RAIL_BOARDINGS_16']) + """ <br> """ 
-                iframe = folium.IFrame(html=html, width=300, height=150)
-                pop_up = folium.Popup(iframe, max_width=2650)
-            
-                folium.CircleMarker([row[1]["LAT"], row[1]["LON"]], 
-                    color='#ffd2b3',
-                    fill_color='#ffd2b3', 
-                    radius= 5,
-                    fill_opacity = 0.3, popup=pop_up).add_to(quarter_group)
-                     
-        elif buffer == 'Third':
-            third_group = folium.FeatureGroup(name = 'Competing Transit (Third-Mile Buffers)')
-            for row in transit.iterrows():
-                html ="""<h2> STOP: """ + str(row[1]['STOP_ID']) + """ </h2> <br>
-                BART Difference: """ + str(row[1]['bart_diff']) + """ <br>
-                MUNI Rail Difference: """ + str(row[1]['muni_diff']) + """ <br>
-                CalTrain Difference: """ + str(row[1]['cal_diff']) + """ <br>
-                <br>
-                <br>
-                2009 BART Boardings: """ + str(row[1]['BART_FROMS_09']) + """ <br>
-                2009 CalTrain Boardings: """ + str(row[1]['CALTRAIN_ON_09']) + """ <br>
-                2009 MUNI Rail Boardings: """ + str(row[1]['MUNI_RAIL_BOARDINGS_09']) + """ <br> 
-                <br>
-                2016 BART Boardings: """ + str(row[1]['BART_FROMS_16']) + """ <br>
-                2016 CalTrain Boardings: """ + str(row[1]['CALTRAIN_OFF_16']) + """ <br>
-                2016 MUNI Rail Boardings: """ + str(row[1]['MUNI_RAIL_BOARDINGS_16']) + """ <br> """ 
-                
-                iframe = folium.IFrame(html=html, width=300, height=150)
-                pop_up = folium.Popup(iframe, max_width=2650)
-                
-                folium.CircleMarker([row[1]["LAT"], row[1]["LON"]], 
-                    color='#ffd2b3',
-                    fill_color='#ffd2b3', 
-                    radius= 7,
-                    fill_opacity = 0.3, popup=pop_up).add_to(third_group)
-                     
-    tenth_group.add_to(mapa)
+        iframe = folium.IFrame(html=html, width=300, height=150)
+        pop_up = folium.Popup(iframe, max_width=2650)
+    
+        folium.CircleMarker([row[1]["LAT"], row[1]["LON"]], 
+            color= col_func(row[1]['P_DIFF']),
+            fill_color = col_func(row[1]['P_DIFF']), 
+            radius= rad_func(row[1]['DIFF']),
+            fill_opacity = 0.3, popup=pop_up).add_to(rail_group)   
+    
+    
+    
+    rail_group.add_to(mapa)
+    bart_group.add_to(mapa)
     quarter_group.add_to(mapa)
-    third_group.add_to(mapa)
     folium.LayerControl().add_to(mapa)
     outfile = outfile_start +table + '_' + colmn_name + '.html'
     mapa.save(outfile)

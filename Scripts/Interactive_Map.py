@@ -99,7 +99,7 @@ if __name__ == "__main__":
     df[colmn_per_str] = df[colmn_per].astype(str) + '%'
     show_list = ['STOP_ID',colmn_per,colmn_diff,colmn_name_base,colmn_name_future]
 
-    print('Mapping the Data!')
+    print('Mapping the Bus Data!')
 #issues with colmn_values being skewed severly towards the minimum so all radius sizes will be similar (could increase step size to show more of a change)
     map.map(colmn_name_base,colmn_name_future,colmn_per,colmn_per_str,colmn_diff,df,show_list,OUTFILE_START,TABLE,COLMN_NAME,map.color,map.radius,BUFFERS,TRANSIT_START09,TRANSIT_START16)
     print('ALL DONE!! TIME FOR AN IPA!!!')
