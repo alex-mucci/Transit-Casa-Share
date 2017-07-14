@@ -169,7 +169,7 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
     #sets the map zoomed into san fran with a scale bar
     mapa = folium.Map([37.765, -122.45],
                   zoom_start=13,
-                  tiles='cartodbpositron',
+                  tiles='openstreetmap',
                   control_scale = True)
    
    #sets the layers up so that marks can be added to it (NEED TO CHANGE WHEN THE DATA IM MAPPING CHANGES!!!)
@@ -343,7 +343,7 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
     
     print('Processing Competing Transit!')
   
-    buffer = 'Tenth'
+    buffer = 'Quarter'
     transit09 = pd.read_csv(TRANSIT_START09 + buffer + '_Mapping_Comp_Transit.csv', thousands = ',')
     transit16 = pd.read_csv(TRANSIT_START16 + buffer + '_Mapping_Comp_Transit.csv', thousands = ',')
     merged_transit = pd.merge(transit09,transit16,how = 'outer',on = 'STOP_ID',suffixes =('_09','_16'))
@@ -362,6 +362,7 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
    
     quarter_group = folium.FeatureGroup(name = 'Competing Transit (Quarter-Mile Buffers)')
     for row in transit.iterrows():
+        print(row)
         html ="""<h2> STOP: """ + str(row[1]['STOP_ID']) + """ </h2> <br>
         BART Difference: """ + str(row[1]['bart_diff']) + """ <br>
         MUNI Rail Difference: """ + str(row[1]['muni_diff']) + """ <br>
@@ -434,7 +435,7 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
         
         iframe = folium.IFrame(html=html, width=300, height=150)
         pop_up = folium.Popup(iframe, max_width=2650)
-    
+        
         folium.CircleMarker([row[1]["LAT"], row[1]["LON"]], 
             color= col_func(row[1]['P_DIFF']),
             fill_color = col_func(row[1]['P_DIFF']), 
@@ -442,11 +443,15 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
             fill_opacity = 0.3, popup=pop_up).add_to(rail_group)   
     
     
-    
+    #leaving out the quater mile transit buffers because it causes the layer control to disappear and it isnt really needed
     rail_group.add_to(mapa)
     bart_group.add_to(mapa)
-    quarter_group.add_to(mapa)
+    #quarter_group.add_to(mapa)
+    folium.TileLayer('cartodbpositron').add_to(mapa)
+    
     folium.LayerControl().add_to(mapa)
+    
+
     outfile = outfile_start +table + '_' + colmn_name + '.html'
     mapa.save(outfile)
     

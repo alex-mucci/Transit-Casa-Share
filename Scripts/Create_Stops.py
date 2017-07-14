@@ -13,15 +13,18 @@ MONTHS_16 = ['2016-08-13T00:00:00.000000000']
 TABLE_16 = 'sfmuni'
 COLUMNS_16 = ['STOP_ID','STOP_LAT','STOP_LON','ROUTE_TYPE','DOW','AGENCY_ID']
 YEAR = 2016
+MODE = 0
 
 
-def grab_stops(hdffile_path,months,table,columns,year): 
+def grab_stops(hdffile_path,months,table,columns,year, mode): 
     """
     function that pulls out all 3,744 bus stop IDs and Lat/Lons 
     
     hdffile_path = path to the H5 file
     
     months = list of months you want to pull out of the H5 file
+    
+    mode = the route type number to select out a specific mode (0 = Rail, 1 =  , 3 = Bus, 5 = Cable Car)
     """
     df_out = pd.DataFrame()
     store = pd.HDFStore(hdffile_path)
@@ -33,7 +36,7 @@ def grab_stops(hdffile_path,months,table,columns,year):
         
    #used the gtfs for 2016 and needed to filter out the data to only include busses operating during the week. 2009 data was already filtered
     if year == 2016:
-        df_out = df_out[(df_out['AGENCY_ID'] == 'SFMTA') & (df_out['ROUTE_TYPE'] == 3) & (df_out['DOW'] == 1)]
+        df_out = df_out[(df_out['AGENCY_ID'] == 'SFMTA') & (df_out['ROUTE_TYPE'] == mode) & (df_out['DOW'] == 1)]
     elif year == 2009:
         df_out = df_out
         
@@ -74,15 +77,22 @@ if __name__ == "__main__":
         print('This year has not been formatted yet')
         
     print('Reading in the Files!')
-    df = grab_stops(hdf,months,table,columns,year)
+    df = grab_stops(hdf,months,table,columns,year,MODE)
     
  
+    if MODE == 3:
+        df.to_csv('E:/Transit-Casa-Alex/Input/Bus_Stops/' + str(year) + '/Bus_Stops.csv')
         
-    df.to_csv('E:/Transit-Casa-Alex/Input/Bus_Stops/' + str(year) + '/Bus_Stops.csv')
+        print('Creating Tremendous Point Features!')
+        stops = LatLon_to_point(df)
+        stops.to_file('E:/Transit-Casa-Alex/Input/Bus_Stops/' + str(year) + '/Bus_Stops.shp', driver='ESRI Shapefile')
     
-    print('Creating Tremendous Point Features!')
-    stops = LatLon_to_point(df)
-    stops.to_file('E:/Transit-Casa-Alex/Input/Bus_Stops/' + str(year) + '/Bus_Stops.shp', driver='ESRI Shapefile')
+    elif MODE === 0:
+        df.to_csv('E:/Transit-Casa-Alex/Input/Rail Stops/' + str(year) + '/Rail_Stops.csv')
+        
+        print('Creating Tremendous Point Features!')
+        stops = LatLon_to_point(df)
+        stops.to_file('E:/Transit-Casa-Alex/Input/Rail Stops/' + str(year) + '/Rail_Stops.shp', driver='ESRI Shapefile')
     
     print('TOO EASY!')
     
