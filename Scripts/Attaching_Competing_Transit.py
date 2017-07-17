@@ -115,12 +115,12 @@ if __name__ == "__main__":
             if year == 2009:
                 #merge everything that is for 2009 except bike share ridership because it is assumed to be 0
                 bart = bart.drop('geometry',axis = 1)
-                transit = bart.merge(cal.drop('geometry',axis =1),on = 'STOP_ID',how = 'outer').merge(muni.drop('geometry',axis = 1),on = 'STOP_ID',how = 'outer').merge(bike.drop('geometry',axis = 1, on = 'STOP_ID'))
+                transit = bart.merge(cal.drop('geometry',axis =1),on = 'STOP_ID',how = 'outer').merge(muni.drop('geometry',axis = 1),on = 'STOP_ID',how = 'outer').merge(bike.drop('geometry',axis = 1), on = 'STOP_ID',how = 'outer')
             
             elif year == 2016:
                 #merge all 2016 data together
                 bart = bart.drop('geometry',axis = 1)
-                transit = bart.merge(cal.drop('geometry',axis = 1),on = 'STOP_ID',how = 'outer').merge(muni.drop('geometry',axis =1),on = 'STOP_ID',how = 'outer').merge(bike.drop('geometry',axis = 1),on = 'STOP_ID',how ='outer')
+                transit = bart.merge(cal.drop('geometry',axis = 1),on = 'STOP_ID',how = 'outer').merge(muni.drop('geometry',axis =1),on = 'STOP_ID',how = 'outer').merge(bike.drop('geometry',axis = 1), on = 'STOP_ID',how = 'outer')
 
             #name the combined competing transit file based on the buffer size it is associated with
             if buffer_end == BUFFER_ENDS[0]:
