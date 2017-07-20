@@ -1,11 +1,11 @@
 import pandas as pd
 import geopandas as gp
 
+MODE = 'MUNI Rail'
+STOPS_START = 'E:/Transit-Casa-Alex/MUNI Rail/Input/Rail Stops Performance Data/MUNI_Rail_Stops_'
+STOPS_END = '.shp'
 
-STOPS_START = 'E:/Transit-Casa-Alex/Input/Bus_Stops/'
-STOPS_END = '/Post-Deleted_Stops/Bus_Stops.shp'
-
-BUFFERS_START  = 'E:/Transit-Casa-Alex/Output/Buffers/'
+BUFFERS_START  = 'E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/'
 BUFFERS_ENDS = ['/Tenth/Buffers_Tenth_GCS.shp', '/Third/Buffers_Third_GCS.shp', '/Quarter/Buffers_Quarter_GCS.shp']
 
 YEARS = [2009,2016]
@@ -37,12 +37,12 @@ if __name__ == "__main__":
             
             
             if buffers_ends == BUFFERS_ENDS[0]:
-                comp.to_csv('E:/Transit-Casa-Alex/Output/Final Data/' + str(year) + '/Competing Stops Buffers/Tenth_Comp_Bus_Stops.csv')
+                comp.to_csv('E:/Transit-Casa-Alex/' + MODE + '/Output/Final Data/' + str(year) + '/Competing Stops Buffers/Tenth_Comp_Bus_Stops.csv')
             
             elif buffers_ends == BUFFERS_ENDS[1]:
-                comp.to_csv('E:/Transit-Casa-Alex/Output/Final Data/' + str(year) + '/Competing Stops Buffers/Third_Comp_Bus_Stops.csv')
+                comp.to_csv('E:/Transit-Casa-Alex/' + MODE + '/Output/Final Data/' + str(year) + '/Competing Stops Buffers/Third_Comp_Bus_Stops.csv')
             
             elif buffers_ends == BUFFERS_ENDS[2]:
-                comp.to_csv('E:/Transit-Casa-Alex/Output/Final Data/' + str(year) + '/Competing Stops Buffers/Quarter_Comp_Bus_Stops.csv')
+                comp.to_csv('E:/Transit-Casa-Alex/' + MODE + '/Output/Final Data/' + str(year) + '/Competing Stops Buffers/Quarter_Comp_Bus_Stops.csv')
     
     print('Competition only Makes you Better!')

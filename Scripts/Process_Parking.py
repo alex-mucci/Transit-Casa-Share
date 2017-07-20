@@ -17,10 +17,10 @@ OFF_PARK_PATH = 'E:\Transit-Casa-Alex\Input\Parking\Demand/Off Street Parking De
 OFF_RES_PATH = 'E:\Transit-Casa-Alex\Input\Parking\Demand/Off Street Residential Parking Demand.csv'
 MAZ_PATH = 'E:/Transit-Casa-Alex/Input/Parking/TAZ39785.shp'
 
-STOPS_START = 'E:/Transit-Casa-Alex/Input/Bus_Stops/'
-STOPS_END = '/Post-Deleted_Stops/Bus_Stops.shp'
+STOPS_START = 'E:/Transit-Casa-Alex/MUNI Rail/Input/Rail Stops Performance Data/MUNI_Rail_Stops_'
+STOPS_END = '.shp'
 
-
+MODE = 'MUNI Rail'
 
 
 
@@ -66,8 +66,8 @@ if __name__ == "__main__":
         parking_demand = pd.merge(parking,demand, how = 'left',left_on = 'MAZ_ORIGIN',right_on = 'MAZ')
         parking_demand = parking_demand[KEEP2]
 
-        parking_demand.to_csv('E:\Transit-Casa-Alex\Output\Parking Demand/' + str(year) + 'Parking_Demand.csv')
+        parking_demand.to_csv('E:/Transit-Casa-Alex/' + MODE + '/Output/Parking Demand/' + str(year) + '_Parking_Demand.csv')
         parking_demand_geo = gp.GeoDataFrame(parking_demand)
-        parking_demand_geo.to_file('E:\Transit-Casa-Alex\Output\Parking Demand/' + str(year) + 'Parking_Demand.shp')
+        parking_demand_geo.to_file('E:/Transit-Casa-Alex/' + MODE + '/Output/Parking Demand/' + str(year) + '_Parking_Demand.shp')
         
     print('TOO EASY!')

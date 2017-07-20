@@ -69,7 +69,6 @@ def make_table(hdffile,table,MONTH1,MONTH2,MONTH3):
 #average the number of ONs and take the first name given to each stop (September's Name)
     df_final['STOP_NAME'] = df_final['STOP_NAME_10']
     df_final['AVG'] = df_final[['ON_10','ON_11','ON_12']].mean(axis = 1)
-
     
     df_final['STOP_ID'] = df_merge['STOP_ID']
     df_final['STOP_LAT'] = df_merge.apply(lambda row: map.choose_right_latlon(row['STOP_LAT_10'], row['STOP_LAT']), axis=1)

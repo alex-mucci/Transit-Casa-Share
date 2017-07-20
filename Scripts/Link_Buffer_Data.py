@@ -2,7 +2,7 @@ import pandas as pd
 import geopandas as gp
 import numpy as np
 BUFFERS = ['Tenth','Quarter','Third']
-YEARS = ['2009','2016']
+YEARS = ['2016']
 
 PATH_START = 'E:/Transit-Casa-Alex/Output/Final Data/'
 OUTFILE_START = 'E:/Transit-Casa-Alex/Output/Modeling'
@@ -31,7 +31,6 @@ def link_buffer_data(acs,bus,park,trans,census,comp,edd,transbay):
     df = pd.merge(df,comp,how = 'left',on = 'STOP_ID',suffixes = ('','_d'))    
     df = pd.merge(df,transbay,how = 'left',on = 'STOP_ID',suffixes = ('','_e'))
     df = pd.merge(df,edd, how = 'left', left_on = 'STOP_ID',right_on = 'STOP_ID', suffixes = ('','_f'))
-    
     return df
     
     
@@ -65,8 +64,9 @@ if __name__ == "__main__":
             edd = gp.read_file(edd_path)
             transbay = gp.read_file(transbay_path)
 
-
-
+            edd.STOP_ID = edd.STOP_ID.convert_objects(convert_numeric = True)
+            transbay.STOP_ID = transbay.STOP_ID.convert_objects(convert_numeric = True)
+            
             #merge all of the data together
             data = link_buffer_data(acs,bus,park,trans,census,comp,edd,transbay)
             

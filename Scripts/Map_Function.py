@@ -115,6 +115,7 @@ def color(colmn_per):
     elif int(colmn_per) in range(500,10000000):
         col='#006600'
     else:
+        print('Bad Color')
         col='Black'
     return col
 
@@ -136,12 +137,12 @@ def radius(colmn_value):
             rad = 12
         elif abs(int(colmn_value)) in range(500,1000):
             rad = 18
-        elif abs(int(colmn_value)) in range(500,30000000):
+        elif abs(int(colmn_value)) in range(1000,30000000):
             rad = 24
         else:
-            print('bad radius1')
+            print('Bad Radius')
             print(colmn_value)
-            rad=500
+            rad=150
         return rad
         
 
@@ -362,7 +363,6 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
    
     quarter_group = folium.FeatureGroup(name = 'Competing Transit (Quarter-Mile Buffers)')
     for row in transit.iterrows():
-        print(row)
         html ="""<h2> STOP: """ + str(row[1]['STOP_ID']) + """ </h2> <br>
         BART Difference: """ + str(row[1]['bart_diff']) + """ <br>
         MUNI Rail Difference: """ + str(row[1]['muni_diff']) + """ <br>

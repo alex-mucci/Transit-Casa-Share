@@ -8,9 +8,10 @@ from shapely.geometry import Point
 
 
 BUFFER_SIZES = [1760,1320,528]
-YEAR = 2009
-
-
+YEARS = [2009,2016]
+STOPS_PATH09 = 'E:/Transit-Casa-Alex/MUNI Rail/Input/Rail Stops Performance Data/MUNI_Rail_Stops_2009.shp'
+STOPS_PATH16 = 'E:/Transit-Casa-Alex/MUNI Rail/Input/Rail Stops Performance Data/MUNI_Rail_Stops_2016.shp'
+MODE = 'MUNI Rail'
 
 def make_buffers(stops_df,buffer_size):
 
@@ -32,36 +33,50 @@ def make_buffers(stops_df,buffer_size):
    
  
 if __name__ == "__main__":
-    # could do multiple years if given a list of years in YEARS
-    #for year in YEARS:
+
     
-    year = YEAR
-    print('Reading in the Files!')
-    stops = gp.read_file('E:/Transit-Casa-Alex/Input/Bus_Stops/' + str(year) + '/Post-Deleted_Stops/Bus_Stops.shp')
-    
-    for buffer_size in BUFFER_SIZES:
-        print('Creating HUGE ' + str(buffer_size) + ' buffers')
+    for year in YEARS:
+        print('Reading in the Files!')
         
-        stops.crs = {'init':'epsg:4269'}
-        buffers = make_buffers(stops,buffer_size)
-        
-        if buffer_size == 1760:
-            buffers.to_file('E:/Transit-Casa-Alex/Output/Buffers/' + str(year) + '/Buffers_Quarter.shp',driver='ESRI Shapefile')
-        elif buffer_size == 1320:
-            buffers.to_file('E:/Transit-Casa-Alex/Output/Buffers/' + str(year) + '/Buffers_Third.shp',driver='ESRI Shapefile')
-        elif buffer_size == 528:
-            buffers.to_file('E:/Transit-Casa-Alex/Output/Buffers/' + str(year) + '/Buffers_Tenth.shp',driver='ESRI Shapefile')
-        else:
-            print('Bad Buffer Size!')
+        if year == 2009:
+            stops = STOPS_PATH09
             
-        buffers = buffers.to_crs({'init':'epsg:4269'})
+        elif year == 2016:
+            stops = STOPS_PATH16
         
-        if buffer_size == 1760:
-            buffers.to_file('E:/Transit-Casa-Alex/Output/Buffers/' + str(year) + '/Buffers_Quarter_GCS.shp',driver='ESRI Shapefile')
-        elif buffer_size == 1320:
-            buffers.to_file('E:/Transit-Casa-Alex/Output/Buffers/' + str(year) + '/Buffers_Third_GCS.shp',driver='ESRI Shapefile')
-        elif buffer_size == 528:
-            buffers.to_file('E:/Transit-Casa-Alex/Output/Buffers/' + str(year) + '/Buffers_Tenth_GCS.shp',driver='ESRI Shapefile')
+        
         else:
-            print('Bad Buffer Size!')
-    print('JUST MADE THIS CODE GREAT AGAIN!')
+            print('Bad Year')
+            
+        stops = gp.read_file(stops)    
+        for buffer_size in BUFFER_SIZES:
+            print('Creating HUGE ' + str(buffer_size) + ' buffers')
+            
+            stops.crs = {'init':'epsg:4269'}
+
+            stops = stops.drop_duplicates(subset = 'STOP_ID')
+                      
+            buffers = make_buffers(stops,buffer_size)
+            
+            if buffer_size == 1760:
+                buffers.to_csv('E:/Transit-Casa-Alex/' + MODE +'/Output/Buffers/' + str(year) + '/Buffers_Quarter.csv')
+            elif buffer_size == 1320:
+                buffers.to_csv('E:/Transit-Casa-Alex/' + MODE +'/Output/Buffers/' + str(year) + '/Buffers_Third.csv')
+            elif buffer_size == 528:
+                buffers.to_csv('E:/Transit-Casa-Alex/' + MODE +'/Output/Buffers/' + str(year) + '/Buffers_Tenth.csv')
+            else:
+                print('Bad Buffer Size!')
+            
+            buffers = buffers.to_crs({'init':'epsg:4269'})
+   
+
+            if buffer_size == 1760:
+                buffers.to_file('E:/Transit-Casa-Alex/' + MODE +'/Output/Buffers/' + str(year) + '/Buffers_Quarter_GCS.shp',driver='ESRI Shapefile')
+                buffers.to_file('E:/Transit-Casa-Alex/' + MODE +'/Output/Buffers/' + str(year) + '/Buffers_Quarter_GCS.shp',driver='ESRI Shapefile')
+            elif buffer_size == 1320:
+                buffers.to_file('E:/Transit-Casa-Alex/' + MODE +'/Output/Buffers/' + str(year) + '/Buffers_Third_GCS.shp',driver='ESRI Shapefile')
+            elif buffer_size == 528:
+                buffers.to_file('E:/Transit-Casa-Alex/' + MODE +'/Output/Buffers/' + str(year) + '/Buffers_Tenth_GCS.shp',driver='ESRI Shapefile')
+            else:
+                print('Bad Buffer Size!')
+        print('JUST MADE THIS CODE GREAT AGAIN!')

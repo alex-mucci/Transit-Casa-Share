@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 import geopandas as gp
 
-YEAR = 2015
-
+YEAR = 2009
+MODE = 'MUNI Rail'
 #Note that for different years the file paths must be changed
 
 #Table file paths for the 2009 data 
@@ -20,9 +20,9 @@ DP03_15 = 'E:/Transit-Casa-Alex/Input/ACS 5 Year Estimates/Census Tracts/2015/Sa
 B08119_15 = 'E:/Transit-Casa-Alex/Input/ACS 5 Year Estimates/Census Tracts/2015/San Francisco/B08119/ACS_15_5YR_B08119_with_ann.csv'
 
 
-STOPS_09 = 'E:/Transit-Casa-Alex/Input/Bus_Stops/2009/Post-Deleted_Stops/Bus_Stops.shp'
+STOPS_09 = 'E:/Transit-Casa-Alex/MUNI Rail/Input/Rail Stops Performance Data/MUNI_Rail_Stops_2009.shp'
 #used the 2016 bus stops because that is the year we are interested in. The acs data was only available for 2015.
-STOPS_15 = 'E:/Transit-Casa-Alex/Input/Bus_Stops/2016/Post-Deleted_Stops/Bus_Stops.shp'
+STOPS_15 = 'E:/Transit-Casa-Alex/MUNI Rail/Input/Rail Stops Performance Data/MUNI_Rail_Stops_2016.shp'
 
 #Cenus tract Shapefile paths
 SF15 = 'E:/Transit-Casa-Alex/Input/2010 Cenusus Shapefiles/Census Tracts/2015/San Francisco/SF_2015.shp'
@@ -281,10 +281,10 @@ if __name__ == "__main__":
     
     
     #write to a csv file 
-    acs.to_csv('E:/Transit-Casa-Alex/Output/Demographic (ACS)/' + str(year) + '/ACS_DATA.csv')
+    acs.to_csv('E:/Transit-Casa-Alex/' + MODE + '/Output/Demographic (ACS)/' + str(year) + '/ACS_DATA.csv')
     
     #write to a shapefile 
-    acs.to_file('E:/Transit-Casa-Alex/Output\Demographic (ACS)/' + str(year) + '/Bus_Stops_ACS.shp',driver = 'ESRI Shapefile')
+    acs.to_file('E:/Transit-Casa-Alex/' + MODE + '/Output\Demographic (ACS)/' + str(year) + '/Bus_Stops_ACS.shp',driver = 'ESRI Shapefile')
 
     print('ALL DONE TIME FOR A BEER!')
     

@@ -1,10 +1,11 @@
 import pandas as pd
 import geopandas as gp
 
-START_BUFFER_PATHS = ['E:/Transit-Casa-Alex/Output/Buffers/','E:/Transit-Casa-Alex/Output/Buffers/', 'E:/Transit-Casa-Alex/Output/Buffers/']
+START_BUFFER_PATHS = ['E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/','E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/', 'E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/']
 
 YEAR = 2016
 
+MODE = 'MUNI Rail'
 
 KEEP09 = ['EDHLTH_RAC_SCALED', 'EDHLTH_WAC_SCALED',
        'EMP_RAC_SCALED', 'EMP_WAC_SCALED', 'LEISER_RAC_SCALED',
@@ -58,6 +59,7 @@ if __name__ == "__main__":
                
     for buffer in buffers:
         print('Processing buffer ' + str(buffer))
+        
         year = YEAR
         
         if year == 2009:
@@ -81,11 +83,11 @@ if __name__ == "__main__":
         print('Saving all Files!')
         
         if buffer == buffers[0]:
-            split_scaled.to_csv('E:/Transit-Casa-Alex/Output/Tenth_Census_Block_Estimation_File.csv')
+            split_scaled.to_csv('E:/Transit-Casa-Alex/' + MODE + '/Output/Tenth_Census_Block_Estimation_File.csv')
         
         elif buffer == buffers[1]:
-            split_scaled.to_csv('E:/Transit-Casa-Alex/Output/Third_Census_Block_Estimation_File.csv')
+            split_scaled.to_csv('E:/Transit-Casa-Alex/' + MODE + '/Output/Third_Census_Block_Estimation_File.csv')
         
         elif buffer == buffers[2]:
-            split_scaled.to_csv('E:/Transit-Casa-Alex/Output/Quarter_Census_Block_Estimation_File.csv')
+            split_scaled.to_csv('E:/Transit-Casa-Alex/' + MODE + '/Output/Quarter_Census_Block_Estimation_File.csv')
     print('ALL DONE TIME FOR MONTY PYTHON!')

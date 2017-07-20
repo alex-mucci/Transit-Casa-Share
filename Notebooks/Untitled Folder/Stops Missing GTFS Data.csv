@@ -1,0 +1,26 @@
+,ROUTE_SHORT_NAME,STOP_ID,DIR,HEADWAY_S,EOL,SOL,STOP_LAT,STOP_LON,DWELL_S,RUNTIME_S,TOTTIME_S,SERVMILES_S,RUNSPEED_S,TOTSPEED_S,Route,STOP,Boardings,Alightings,STOP NAME
+441,J,7155.0,0,,,,,,,,,,,,J-CHURCH,Green Div Yard,0.0,412.0,SAN JOSE AVE & GENEVA AVE
+442,M,6992.0,0,,,,,,,,,,,,M-OCEAN VIEW,Embarc Sta,0.0,,Metro Embarcadero Station
+443,N,,1,,,,,,,,,,,,N-JUDAH,Duboce&Church,0.0,0.0,because they were to be added to the other duboce and church stop and since they have 0 ridership they have no effect
+444,N,,1,,,,,,,,,,,,N-JUDAH,King&6th,0.0,0.0,Not a Public Stop
+445,N,,0,,,,,,,,,,,,N-JUDAH,DuboceChurch,0.0,0.0,because they were to be added to the other duboce and church stop and since they have 0 ridership they have no effect
+446,N,,0,,,,,,,,,,,,N-JUDAH,King&6th,0.0,0.0,Not a Public Stop
+447,KT,7162.0,0,,,,,,,,,,,,KT-INGLESIDE/THIRD,Tunnel Entry,3.0,4.0,Duboce Ave & Church St - Ramp
+448,L,6736.0,1,,,,,,,,,,,,L-TARAVAL,Ulloa&ForstSide,30.0,31.0,Ulloa St & Forest Side Ave
+449,L,6737.0,0,,,,,,,,,,,,L-TARAVAL,Ulloa&ForstSide,37.0,83.0,Ulloa St & Forest Side Ave
+450,KT,5807.0,1,,,,,,,,,,,,KT-INGLESIDE/THIRD,Ocean&S.Lndro,48.0,99.0,Ocean Ave & San Leandro Way
+451,KT,5806.0,0,,,,,,,,,,,,KT-INGLESIDE/THIRD,Ocean&S.Lndro,65.0,71.0,Ocean Ave & San Leandro Way
+452,L,6615.0,0,,,,,,,,,,,,L-TARAVAL,Taraval&17th,93.0,462.0,Taraval St & 17th Ave
+453,L,6641.0,0,,,,,,,,,,,,L-TARAVAL,Taraval&Sunset,99.0,472.0,Taraval St & Sunset Blvd
+454,N,3915.0,0,,,,,,,,,,,,N-JUDAH,Carl&,114.0,606.0,Carl St & Stanyan St
+455,KT,5779.0,0,,,,,,,,,,,,KT-INGLESIDE/THIRD,Ocean&Aptos,121.0,128.0,Ocean Ave & Aptos Ave
+456,KT,5780.0,1,,,,,,,,,,,,KT-INGLESIDE/THIRD,Ocean&Aptos,131.0,197.0,Ocean Ave & Aptos Ave
+457,KT,7109.0,0,,,,,,,,,,,,KT-INGLESIDE/THIRD,St.FrancisCrcle,141.0,262.0,West Portal/Sloat/St Francis Circle
+458,M,3715.0,0,,,,,,,,,,,,M-OCEAN VIEW,Broad&Capitol,180.0,236.0,Broad St & Capitol Ave
+459,KT,6503.0,1,,,,,,,,,,,,KT-INGLESIDE/THIRD,St.FrancisCrcle,259.0,147.0,West Portal/Sloat/St Francis Circle
+460,M,3716.0,1,,,,,,,,,,,,M-OCEAN VIEW,Broad&Capitol,304.0,210.0,Broad St & Capitol Ave
+461,L,6614.0,1,,,,,,,,,,,,L-TARAVAL,Taraval&17th,493.0,138.0,Taraval St & 17th Ave
+462,L,6640.0,1,,,,,,,,,,,,L-TARAVAL,Taraval&Sunset,593.0,76.0,Taraval St & Sunset Blvd
+463,J,7155.0,1,,,,,,,,,,,,J-CHURCH,GreenDivYard,648.0,0.0,SAN JOSE AVE & GENEVA AVE
+464,KT,6740.0,0,,,,,,,,,,,,KT-INGLESIDE/THIRD,West PortalSta,691.0,978.0,West Portal Station
+465,KT,6739.0,1,,,,,,,,,,,,KT-INGLESIDE/THIRD,West PortalSta,874.0,421.0,West Portal Station

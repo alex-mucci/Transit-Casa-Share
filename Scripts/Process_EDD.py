@@ -1,8 +1,8 @@
 import geopandas as gp
 
-BUFFERS_START = 'E:/Transit-Casa-Alex/Output/Buffers/'
-
+BUFFERS_START = 'E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/'
 BUFFERS_ENDS = ['/Tenth/Buffers_Tenth_GCS.shp', '/Quarter/Buffers_Quarter_GCS.shp', '/Third/Buffers_Third_GCS.shp']
+MODE = 'MUNI Rail'
 
 # could not use the year variable because the 2016 edd data is actually for 2015. It is the most recent data that was available
 
@@ -48,12 +48,12 @@ if __name__ == "__main__":
             joined_geo.crs = buffers.crs
 
             if buffer == BUFFERS_ENDS[0]:
-                joined_geo.to_file('E:/Transit-Casa-Alex/Output/Final Data/' + str(year) + '/EDD Buffers/Tenth_EDD.shp',driver = 'ESRI Shapefile')
+                joined_geo.to_file('E:/Transit-Casa-Alex/' + MODE + '/Output/Final Data/' + str(year) + '/EDD Buffers/Tenth_EDD.shp',driver = 'ESRI Shapefile')
                 
             elif buffer == BUFFERS_ENDS[1]:
-                joined_geo.to_file('E:/Transit-Casa-Alex/Output/Final Data/' + str(year) + '/EDD Buffers/Quarter_EDD.shp',driver = 'ESRI Shapefile')
+                joined_geo.to_file('E:/Transit-Casa-Alex/' + MODE + '/Output/Final Data/' + str(year) + '/EDD Buffers/Quarter_EDD.shp',driver = 'ESRI Shapefile')
                 
             elif buffer == BUFFERS_ENDS[2]:
-                joined_geo.to_file('E:/Transit-Casa-Alex/Output/Final Data/' + str(year) + '/EDD Buffers/Third_EDD.shp',driver = 'ESRI Shapefile')
+                joined_geo.to_file('E:/Transit-Casa-Alex/' + MODE + '/Output/Final Data/' + str(year) + '/EDD Buffers/Third_EDD.shp',driver = 'ESRI Shapefile')
             else:
                 print('Bad Buffer Path!')

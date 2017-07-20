@@ -4,18 +4,19 @@ import datetime
 import numpy as np
 
 #set which buffer shapefiles that are going to be processed
-BUFFERS_START = ['E:/Transit-Casa-Alex/Output/Buffers/' , 'E:/Transit-Casa-Alex/Output/Buffers/', 'E:/Transit-Casa-Alex/Output/Buffers/']
+BUFFERS_START = ['E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/' , 'E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/', 'E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/']
+BUFFERS_START = ['E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/' , 'E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/', 'E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/']
 
 #change the paths to do a different set of census blocks or to save the output in a different directory
 BLOCKS_START = 'E:/Transit-Casa-Alex/Output/Census Block Data/'
 BLOCKS_END = '/Census_Block_Data.shp'
 
-OUTFILE_CSV_START = 'E:/Transit-Casa-Alex/Output/Buffers/'
-OUTFILE_SHP_START = 'E:/Transit-Casa-Alex/Output/Buffers/'
+OUTFILE_CSV_START = 'E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/'
+OUTFILE_SHP_START = 'E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/'
 OUTFILE_CSV_END = ['/Split Buffers/Split_Buffers_Tenth.csv', '/Split Buffers/Split_Buffers_Quarter.csv', '/Split Buffers/Split_Buffers_Third.csv']
 OUTFILE_SHP_END = ['/Split Buffers/Split_Buffers_Tenth.shp', '/Split Buffers/Split_Buffers_Quarter.shp', '/Split Buffers/Split_Buffers_Third.shp']
 
-YEARS = [2009,2016]
+YEARS = [2016]
 
 def blocks_area(blocks):
     """
@@ -84,7 +85,7 @@ def intersect(buffers,blocks):
     #select out the census blocks that intersect the buffer
         blocks_select = gp.sjoin(blocks,buffer,how = 'inner',op = 'intersects')
        
-        
+
     #identity keeps only the left geodataframe and splits it based on the right geodataframe
         identity = gp.overlay(buffer,blocks_select,how = 'identity')
         identity.crs = {'init' :'epsg:4269'}
