@@ -3,7 +3,7 @@ import geopandas as gp
 
 START_BUFFER_PATHS = ['E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/','E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/', 'E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/']
 
-YEAR = 2016
+YEAR = 2009
 
 MODE = 'MUNI Rail'
 

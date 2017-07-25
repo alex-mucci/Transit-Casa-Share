@@ -21,32 +21,34 @@ def link_buffer_data(acs,rail,park,trans,census,comp,edd,transbay):
     census = geodataframe with edd data
     
     """
-    
+    df = acs
     df = pd.merge(rail,acs,how = 'left', on = 'STOP_ID')
-    df = pd.merge(df,park,how = 'left',on = 'STOP_ID',suffixes = ('','_a'))
-    df = pd.merge(df,trans,how = 'left',on = 'STOP_ID',suffixes = ('','_b'))
+    df = pd.merge(df,trans,how = 'left',on = 'STOP_ID',suffixes = ('','_a'))
+    df = pd.merge(df,comp,how = 'left',on = 'STOP_ID',suffixes = ('','_b'))
     df = pd.merge(df,census,how = 'left',on = 'STOP_ID',suffixes = ('','_c'))
-    df = pd.merge(df,comp,how = 'left',on = 'STOP_ID',suffixes = ('','_d'))    
+    df = pd.merge(df,edd,how = 'left',on = 'STOP_ID',suffixes = ('','_d'))    
     df = pd.merge(df,transbay,how = 'left',on = 'STOP_ID',suffixes = ('','_e'))
-    df = pd.merge(df,edd, how = 'left', left_on = 'STOP_ID',right_on = 'STOP_ID', suffixes = ('','_f'))
+    df = pd.merge(df,park, how = 'left',on = 'STOP_ID', suffixes = ('','_f'))
     return df
     
     
 if __name__ == "__main__":
     for year in YEARS:
+        print('Processing Year ' + year)
         path = PATH_START + year
         acs_path = path + '/ACS_DATA.csv'
         rail_path = path + '/MUNI_Rail_Stops_' + year + '.csv'
-        park_path = path + '/' + year + '_Parking_Demand.csv'
-        
+        park_path = path + '/' + year +'_Parking_Demand.csv'
         acs = pd.read_csv(acs_path)
         acs = acs.drop('Unnamed: 0',axis = 1)
         rail = pd.read_csv(rail_path)
         rail = rail.drop('Unnamed: 0',axis = 1)
-        park = pd.read_csv(park_path)
-        park = park.drop('Unnamed: 0',axis = 1)
-    
+        park = pd.read_csv(park_path, index_col = 0)
+
+        
         for buffer in BUFFERS:
+            print('Processing Buffer ' + buffer)
+
             trans_path = path + '/Competing Transit Buffers/' + buffer + '_Competing_Transit.csv'
             census_path = path + '/Census Block Buffers/' + buffer + '_Census_Block_Estimation_File.csv'
             comp_path = path + '/Competing Stops Buffers/' + buffer + '_Comp_Bus_Stops.csv'
@@ -61,10 +63,10 @@ if __name__ == "__main__":
             comp = comp.drop('Unnamed: 0',axis = 1)
             edd = gp.read_file(edd_path)
             transbay = gp.read_file(transbay_path)
-
-            edd.STOP_ID = edd.STOP_ID.convert_objects(convert_numeric = True)
-            transbay.STOP_ID = transbay.STOP_ID.convert_objects(convert_numeric = True)
             
+            edd.STOP_ID = pd.to_numeric(edd.STOP_ID)
+            transbay.STOP_ID = transbay.STOP_ID.convert_objects(convert_numeric = True)
+
             #merge all of the data together
             data = link_buffer_data(acs,rail,park,trans,census,comp,edd,transbay)
             

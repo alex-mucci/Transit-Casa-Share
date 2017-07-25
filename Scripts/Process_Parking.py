@@ -17,7 +17,7 @@ OFF_PARK_PATH = 'E:\Transit-Casa-Alex\Input\Parking\Demand/Off Street Parking De
 OFF_RES_PATH = 'E:\Transit-Casa-Alex\Input\Parking\Demand/Off Street Residential Parking Demand.csv'
 MAZ_PATH = 'E:/Transit-Casa-Alex/Input/Parking/TAZ39785.shp'
 
-STOPS_START = 'E:/Transit-Casa-Alex/MUNI Rail/Input/Rail Stops Performance Data/MUNI_Rail_Stops_'
+STOPS_START = 'E:/Transit-Casa-Alex/MUNI Rail/Input/Rail Stops/MUNI_Rail_Stops_'
 STOPS_END = '.shp'
 
 MODE = 'MUNI Rail'
@@ -60,8 +60,7 @@ if __name__ == "__main__":
         final2 = final[KEEP]
         final2 = gp.GeoDataFrame(final2)
 
-
-        stops = stops.to_crs(maz.crs)
+        maz = maz.to_crs(stops.crs)
         parking = gp.sjoin(stops,maz,how = 'left', op = 'intersects')
         parking_demand = pd.merge(parking,demand, how = 'left',left_on = 'MAZ_ORIGIN',right_on = 'MAZ')
         parking_demand = parking_demand[KEEP2]

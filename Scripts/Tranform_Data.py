@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-drop = ['Unnamed: 0',
+drop09 = ['Unnamed: 0',
 'STOP_LAT_x',
 'STOP_LON_x',
 'STOP_LAT_y',
