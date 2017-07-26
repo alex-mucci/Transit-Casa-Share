@@ -16,7 +16,7 @@ OUTFILE_SHP_START = 'E:/Transit-Casa-Alex/MUNI Rail/Output/Buffers/'
 OUTFILE_CSV_END = ['/Split Buffers/Split_Buffers_Tenth.csv', '/Split Buffers/Split_Buffers_Quarter.csv', '/Split Buffers/Split_Buffers_Third.csv']
 OUTFILE_SHP_END = ['/Split Buffers/Split_Buffers_Tenth.shp', '/Split Buffers/Split_Buffers_Quarter.shp', '/Split Buffers/Split_Buffers_Third.shp']
 
-YEARS = [2016]
+YEARS = [2009,2016]
 
 def blocks_area(blocks):
     """
@@ -77,15 +77,13 @@ def intersect(buffers,blocks):
     
     #set the start time to check how long it takes to intersect one buffer
     start = datetime.datetime.now()
-    
+
     for stop in buffers.STOP_ID.unique():
     #select out one of the buffers to intersect
         buffer = buffers[buffers['STOP_ID'] == stop]
-
     #select out the census blocks that intersect the buffer
-        blocks_select = gp.sjoin(blocks,buffer,how = 'inner',op = 'intersects')
+        blocks_select = gp.sjoin(blocks,buffer,op = 'intersects')
        
-
     #identity keeps only the left geodataframe and splits it based on the right geodataframe
         identity = gp.overlay(buffer,blocks_select,how = 'identity')
         identity.crs = {'init' :'epsg:4269'}
@@ -102,6 +100,7 @@ def intersect(buffers,blocks):
         data = stateplane[stateplane['STOP_ID'] == stop]
         
         final_buffers = final_buffers.append(data)
+        print(len(final_buffers.STOP_ID.unique()))
         count = count+1
         end = datetime.datetime.now()
         time = end - start
@@ -128,7 +127,7 @@ if __name__ == "__main__":
             buffers.crs = {'init':'epsg:4269'}
             blocks.crs = {'init':'epsg:4269'}
 
-                
+            
             # calculate the area of the cenusus blocks (in acres)
             blocks = blocks_area(blocks)
             blocks['AREA'] = blocks.apply(lambda row: clean_area_column(row),axis = 1)
