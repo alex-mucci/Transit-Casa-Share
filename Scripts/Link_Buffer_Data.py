@@ -2,7 +2,7 @@ import pandas as pd
 import geopandas as gp
 import numpy as np
 BUFFERS = ['Tenth','Quarter','Third']
-YEARS = ['2016']
+YEARS = ['2009','2016']
 
 PATH_START = 'E:/Transit-Casa-Alex/Output/Final Data/'
 OUTFILE_START = 'E:/Transit-Casa-Alex/Output/Modeling'
@@ -36,9 +36,10 @@ def link_buffer_data(acs,bus,park,trans,census,comp,edd,transbay):
     
 if __name__ == "__main__":
     for year in YEARS:
+        print('Processing Year ' + year)
         path = PATH_START + year
         acs_path = path + '/ACS_DATA.csv'
-        bus_path = path + '/Bus_Performance_Data_' + TABLE + '.csv'
+        bus_path = path + '/Bus_Performance_Data_' + TABLE + '_averaged.csv'
         park_path = path + '/Parking_Demand.csv'
         
         acs = pd.read_csv(acs_path)
@@ -47,8 +48,9 @@ if __name__ == "__main__":
         bus = bus.drop('Unnamed: 0',axis = 1)
         park = pd.read_csv(park_path)
         park = park.drop('Unnamed: 0',axis = 1)
-    
+
         for buffer in BUFFERS:
+            print('Processing Buffer ' + buffer + ' for year ' + year)
             trans_path = path + '/Competing Transit Buffers/' + buffer + '_Competing_Transit.csv'
             census_path = path + '/Census Block Buffers/' + buffer + '_Census_Block_Estimation_File.csv'
             comp_path = path + '/Competing Stops Buffers/' + buffer + '_Comp_Bus_Stops.csv'

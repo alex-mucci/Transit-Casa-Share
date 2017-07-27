@@ -9,8 +9,8 @@ from Map_Function import color
 from Map_Function import radius 
 
 
-INFILE = 'E:/Transit-Casa-Alex/Output/Modeling/2009/Diff_Mapping_Data.csv'
-OUTFILE = 'E:/Transit-Casa-Alex/Output/Modeling/2009/Diff_Map.html'
+INFILE = 'E:/Transit-Casa-Alex/Output/Modeling/2016/Diff_Mapping_Data.csv'
+OUTFILE = 'E:/Transit-Casa-Alex/Output/Modeling/2016/Diff_Map.html'
 
 
 
@@ -75,7 +75,7 @@ def map(stop_id,modeled,observed,colmn_per,colmn_per_str,colmn_diff,df,col_func,
         Employment (Log): """ + str(row['EDD_EMP_LOG']) + """ <br>
         Frequency (Log): """ + str(row['FREQ_S_LOG']) + """ <br>
         EOL_SOL (Dummy): """ + str(row['EOL_SOL']) + """ <br>
-        Housing Density (Log): """ + str(row['HOUSING_09_DEN_LOG']) + """ <br>
+        Housing Density (Log): """ + str(row['HOUSING_16_DEN_LOG']) + """ <br>
         High Income Share: """ + str(row['SHR_INCOME_100P']) + """ <br>
         On Street Parking Price (Log): """ + str(row['PARK_HOURLY_AVG_ON_LOG']) + """ <br>
         Reliability: """ + str(row['ONTIME5']) + """ <br>
@@ -85,7 +85,6 @@ def map(stop_id,modeled,observed,colmn_per,colmn_per_str,colmn_diff,df,col_func,
         Express Route (Dummy): """ + str(row['EXPRESS']) + """ <br>
         Transbay Terminal (Dummy): """ + str(row['TRANSBAY']) + """ <br>
         MUNI Rail Ridership: """ + str(row['MUNI_RAIL_AVG']) + """ <br>
-        CalTrain Station (Dummy): """ + str(row['CAL_STATION']) + """ <br>
         </p>"""
         
         iframe = folium.IFrame(html=html, width=300, height=150)

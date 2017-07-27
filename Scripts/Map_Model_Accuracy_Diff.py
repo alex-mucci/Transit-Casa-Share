@@ -9,7 +9,9 @@ from Map_Function import color
 from Map_Function import radius 
 from Map_Function import choose_right_latlon
 
-INFILE = 'E:/Transit-Casa-Alex/Output/Modeling/Mapping_Data.csv'
+INFILE09 = 'E:/Transit-Casa-Alex/Output/Modeling/2009/Diff_Mapping_Data.csv'
+INFILE16 = 'E:/Transit-Casa-Alex/Output/Modeling/2016/Diff_Mapping_Data.csv'
+
 OUTFILE = 'E:/Transit-Casa-Alex/Output/Modeling/Accuracy_Diff_Map.html'
 
 
@@ -204,10 +206,12 @@ def map(stop_id,base,future,colmn_per,colmn_per_str,colmn_diff,df,col_func,rad_f
     
 if __name__ == "__main__":
     
-    df = pd.read_csv(INFILE,index_col = 0)
+    df09 = pd.read_csv(INFILE09,index_col = 0)
+    df16 = pd.read_csv(INFILE16,index_col = 0)
+    
+    df = pd.merge(df09,df16, how = 'inner', on = 'STOP_ID',suffixes = ('_09','_16'))
     df['LAT'] = df.apply(lambda row: choose_right_latlon(row['STOP_LAT_09'], row['STOP_LAT_16']), axis=1)
     df['LON'] = df.apply(lambda row: choose_right_latlon(row['STOP_LON_09'], row['STOP_LON_16']), axis=1)
-    
     df['MOD_MOD_DIFF_DIFF'] = np.absolute(df['DIFF_AVG_RIDERSHIP_16']) - np.absolute(df['DIFF_AVG_RIDERSHIP_09'])
     df['MOD_MOD_DIFF_PDIFF'] = (df['MOD_MOD_DIFF_DIFF']/np.absolute(df['DIFF_AVG_RIDERSHIP_09']))*100 
     df['COLUMN_PER_STR'] = df['MOD_MOD_DIFF_PDIFF'].apply(lambda x : str(x) + '%')
