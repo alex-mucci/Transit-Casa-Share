@@ -179,6 +179,11 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
     missing_both_group = folium.FeatureGroup(name = 'Stops with Missing Boardings in Both Years')
     good_group = folium.FeatureGroup(name = 'Bus Stops with Complete Boardings')
     
+    missing_both = 0
+    missing09 = 0
+    missing16 = 0
+    good = 0
+    
     for name, row in df.iterrows():
         #make all of the stops missing in both years purple with a radius of 20 
         if np.isnan(row[base]) & np.isnan(row[future]):
@@ -201,7 +206,7 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
                                      radius= 5,
                                      fill_opacity = 0.3, popup=pop_up).add_to(missing_both_group)
 
-
+            missing_both = missing_both + 1
 
 
         # make all of the bus stops missing in 2009 sea green             
@@ -228,7 +233,8 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
                                          fill_color='#3CB371', 
                                          radius=rad_func(row[future]),
                                          fill_opacity = 0.3, popup=pop_up).add_to(missing09_group)
-                                     
+                
+                missing09 = missing09 + 1
                                      
     # make all of the bus stops missing in 2016 maroon                             
         elif np.isnan(row[future]) == True: 
@@ -258,7 +264,8 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
                                          fill_opacity = 0.3, popup=pop_up).add_to(missing16_group)
                                          
                                      
-                                     
+                missing16 = missing16 + 1
+                
 #when both stops have a value of 0 then the percent difference is calculated as a nan and causes issues with the color and radius function
 #since the change is 0 (0 to 0) we set the color and radius equal to what it would have been set by the radius and color function (Dark Grey and a radius of 3 map units)                                 
         elif row[future] == 0 and row[base] == 0:
@@ -301,7 +308,7 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
             elif pd.isnull(row['STOP_NAME_16']):
                 row['STOP_NAME_16'] = 'Missing '
             else:
-                
+                count = 0
                 html="""
                 <h2> STOP: """ + str(row[show_list[0]]) + """  </h2>
                 <p> 
@@ -328,7 +335,14 @@ def map(base,future,colmn_per,colmn_per_str,colmn_diff,df,show_list,outfile_star
                                          radius=rad_func(row[colmn_diff]),
                                          fill_opacity = 0.3, popup=pop_up).add_to(good_group)
                                          
-                                         
+                
+                good = good + 1
+                
+    print(str(missing09) + ' Stops Missing in 2009.')
+    print(str(missing16) + ' Stops Missing in 2016.')
+    print(str(missing_both) + ' Stops Missing in Both Years.')
+    print(str(good) + ' Stops that are in Both Years.')
+    
     missing09_group.add_to(mapa)
     missing16_group.add_to(mapa)
     missing_both_group.add_to(mapa)
