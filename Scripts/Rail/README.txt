@@ -1,0 +1,2 @@
+These are scripts that had to be modified to work specifically for the rail data and model. The rest of the data processing and model estimation can be done using the same scripts used for the bus
+data and model. 
